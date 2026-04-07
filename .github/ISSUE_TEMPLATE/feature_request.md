@@ -14,4 +14,4 @@ As a user I want to [your feature or idea here] so that [describe benefit]
 A clear and concise description of what you want to happen.
 
 **Additional context**
-Add any other context or screenshots about the feature request here. Class diagrams DB diagrams
+Add any other context or screenshots about the feature request here, such as class diagrams or DB diagrams.

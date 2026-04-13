@@ -14,7 +14,7 @@ The website will be built with clarity and an organized content workflow in mind
 - **Backend:** C# with ASP.NET Core
 - **Authentication:** Identity Framework (for user accounts and roles)
 - **Version Control:** Git & GitHub
-- **Database:** To be determined
+- **Database:** Sql Server
 
 ## Planned Page Categories
 - **Graduate Stories** — Articles about alumni

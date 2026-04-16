@@ -58,8 +58,53 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - School_Blog_project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container py-4">
+            <div class="row align-items-start">
+                <!-- Left: icon -->
+                <div class="col-12 col-md-2 mb-3 text-center text-md-start">
+                    <div class="avatar rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
+                         style="width:64px;height:64px;font-weight:600; font-size:1.1rem;">
+                        Logo 2
+                    </div>
+                </div>
+
+                <!-- Middle: About + Categories -->
+                <div class="col-12 col-md-7 mb-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 mb-3">
+                            <h5>More About [School Acronym]</h5>
+                            <ul class="list-unstyled">
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 1</a></li>
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 2</a></li>
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 3</a></li>
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 4</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-12 col-sm-6 mb-3">
+                            <h5>Categories</h5>
+                            <ul class="list-unstyled">
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Students">Student Stories</a></li>
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Graduates">Graduate Stories</a></li>
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Faculty">Faculty &amp; Staff Stories</a></li>
+                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="News">News</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: blurb -->
+                <div class="col-12 col-md-3 mb-3">
+                    <p class="text-muted small">Placeholder blurb about the school and the blog.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom full-width copyright -->
+        <div class="w-100 bg-dark text-white">
+            <div class="w-100 bg-dark text-white text-center py-2 small">
+                &copy; 2026 - School Blog Project
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

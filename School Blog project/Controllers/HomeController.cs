@@ -16,6 +16,26 @@ namespace School_Blog_project.Controllers
 			return View();
 		}
 
+		public IActionResult Students()
+		{
+			return View();
+		}
+
+		public IActionResult Graduates()
+		{
+			return View();
+		}
+
+		public IActionResult Faculty()
+		{
+			return View();
+		}
+
+		public IActionResult News()
+		{
+			return View();
+		}
+
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

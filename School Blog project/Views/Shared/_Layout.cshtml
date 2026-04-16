@@ -20,10 +20,12 @@
                         <text x="50%" y="50%" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" font-size="10" dominant-baseline="middle" text-anchor="middle">Logo</text>
                     </svg>
                 </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -40,6 +42,11 @@
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
+
+                    <!-- Non-functional search input (placeholder only) -->
+                    <form class="d-flex ms-3" role="search" onsubmit="return false;">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
+                    </form>
                 </div>
             </div>
         </nav>

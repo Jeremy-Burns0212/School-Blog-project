@@ -29,11 +29,14 @@
 		/// Indicates whether the article is featured. Stored as a SQL bit/boolean.
 		/// Default value is <c>false</c>.
 		/// </summary>
-		public bool IsFeatured { get; set; } = false;
+		public bool IsFeatured { get; set; }
 
 		/// <summary>
 		/// Optional path or URL to an image associated with the article.
 		/// </summary>
 		public string? ArticleImagePath { get; set; }
+
+		// Navigation collection for many-to-many linking to categories
+		public ICollection<ArticleCatagory> ArticleCatagories { get; set; } = [];
 	}
 }

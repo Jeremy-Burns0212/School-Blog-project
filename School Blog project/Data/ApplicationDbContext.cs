@@ -21,6 +21,9 @@ namespace School_Blog_project.Data
 		/// </summary>
 		public DbSet<Reader> Readers { get; set; } = null!;
 
+		public DbSet<ArticleCatagory> ArticleCatagories { get; set; } = null!;
+		public DbSet<Categories> Categories { get; set; } = null!;
+
 		/// <summary>
 		/// Configures the EF Core model and seeds initial data used for development.
 		/// </summary>
@@ -37,6 +40,22 @@ namespace School_Blog_project.Data
 				new Reader { UserID = 5, Username = "test_editor", Password = "dev_pass_5", IsWriter = false, IsEditor = true },
 				new Reader { UserID = 6, Username = "test_both", Password = "dev_pass_6", IsWriter = true, IsEditor = false } // editor revoked in SQL update
 			);
+
+			// Configure the join entity ArticleCatagory: composite key and foreign keys
+			_ = builder.Entity<ArticleCatagory>(eb =>
+			{
+				_ = eb.HasKey(ac => new { ac.ArticleID, ac.CatagoryId });
+
+				_ = eb.HasOne(ac => ac.Article)
+				  .WithMany(a => a.ArticleCatagories)
+				  .HasForeignKey(ac => ac.ArticleID)
+				  .OnDelete(DeleteBehavior.Cascade);
+
+				_ = eb.HasOne(ac => ac.Catagory)
+				  .WithMany(c => c.ArticleCatagories)
+				  .HasForeignKey(ac => ac.CatagoryId)
+				  .OnDelete(DeleteBehavior.Cascade);
+			});
 
 			// Seed Articles (uses fixed DatePublished values to mirror SYSUTCDATETIME at insert time)
 			DateTime now = DateTime.UtcNow;

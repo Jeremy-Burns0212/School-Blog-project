@@ -1,13 +1,19 @@
-﻿@{
+﻿@* Partial view that renders a "News Archives" card with a descending list of years. *@
+@{
     var startYear = 2013;
     var currentYear = DateTime.Now.Year;
 }
 <div class="card mb-3">
     <div class="card-header">News Archives</div>
     <ul class="list-group list-group-flush">
+        @* Generate a list of years from currentYear down to startYear.
+           Each year is rendered as a list item with a link placeholder. *@
         @for (int y = currentYear; y >= startYear; y--)
         {
-            <li class="list-group-item"><a href="#" class="text-decoration-none" onclick="return false;">@y</a></li>
+            <li class="list-group-item">
+                @* Year link - currently a non-functional placeholder for layout/testing *@
+                <a href="#" class="text-decoration-none" onclick="return false;">@y</a>
+            </li>
         }
     </ul>
 </div>

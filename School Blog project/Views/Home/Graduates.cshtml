@@ -4,10 +4,12 @@
 }
 
 <div class="row">
+    @* Main article list partial view (renders placeholder articles until model is provided) *@
     <div class="col-12 col-md-8">
-        @Html.Partial("_ArticleList")  <!-- will render placeholders until model is provided -->
+        @Html.Partial("_ArticleList")
     </div>
 
+    @* Sidebar: links to news archives years cascading down, followed by the media contact information *@
     <aside class="col-12 col-md-4">
         @Html.Partial("_NewsArchives")
         @Html.Partial("_MediaContact")

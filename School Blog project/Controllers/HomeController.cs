@@ -58,6 +58,15 @@ namespace School_Blog_project.Controllers
 		}
 
 		/// <summary>
+		/// Returns the article view for the user to read
+		/// </summary>
+		/// <returns></returns>
+		public IActionResult Articles()
+		{
+			return View();
+		}
+
+		/// <summary>
 		/// Displays an error page with request information.
 		/// </summary>
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

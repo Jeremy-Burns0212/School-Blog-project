@@ -1,5 +1,15 @@
 ﻿@{
     ViewData["Title"] = "News";
+    ViewData["SelectedCategory"] = "All";
 }
-<h1>News</h1>
-<p>Placeholder page for News.</p>
+
+<div class="row">
+    <div class="col-12 col-md-8">
+        @Html.Partial("_ArticleList")
+    </div>
+
+    <aside class="col-12 col-md-4">
+        @Html.Partial("_NewsArchives")
+        @Html.Partial("_MediaContact")
+    </aside>
+</div>

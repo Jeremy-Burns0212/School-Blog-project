@@ -1,0 +1,13 @@
+﻿@{
+    var startYear = 2013;
+    var currentYear = DateTime.Now.Year;
+}
+<div class="card mb-3">
+    <div class="card-header">News Archives</div>
+    <ul class="list-group list-group-flush">
+        @for (int y = currentYear; y >= startYear; y--)
+        {
+            <li class="list-group-item"><a href="#" class="text-decoration-none" onclick="return false;">@y</a></li>
+        }
+    </ul>
+</div>

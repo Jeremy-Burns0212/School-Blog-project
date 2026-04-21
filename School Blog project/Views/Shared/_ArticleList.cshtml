@@ -1,0 +1,74 @@
+﻿@using School_Blog_project.Models
+@model IEnumerable<ArticleSummary>?
+
+@{
+    var category = ViewData["SelectedCategory"] as string ?? "All";
+    var startYear = 2013;
+    var currentYear = DateTime.Now.Year;
+    var items = Model;
+    var usePlaceholders = items == null || !items.Any();
+    var placeholderCount = 6;
+    var heading = category == "All" ? "News" : $"{category} Stories";
+}
+
+<div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">@heading</h1>
+    </div>
+
+    <div class="list-group mb-4">
+        @if (usePlaceholders)
+        {
+            for (int i = 1; i <= placeholderCount; i++)
+            {
+                <article class="list-group-item list-group-item-action mb-3">
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-3 d-flex align-items-center justify-content-center">
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width:120px;height:80px;">
+                                Image
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-9">
+                            <h5 class="mb-1">Article Title Placeholder @i</h5>
+                            <small class="text-muted">January 1, @currentYear</small>
+                            <p class="mb-1 mt-2 text-muted">Short excerpt placeholder text to show layout only.</p>
+                            <a class="btn btn-outline-primary btn-sm" href="#" onclick="return false;">Read more</a>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+        else
+        {
+            foreach (var a in items)
+            {
+                <article class="list-group-item list-group-item-action mb-3">
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-3 d-flex align-items-center justify-content-center">
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width:120px;height:80px;">
+                                @(!string.IsNullOrEmpty(a.ImageUrl) ? "Image" : "Image")
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-9">
+                            <h5 class="mb-1">@a.Title</h5>
+                            <small class="text-muted">@a.Date.ToString("MMMM d, yyyy")</small>
+                            <p class="mb-1 mt-2 text-muted">@a.Description</p>
+                            <a class="btn btn-outline-primary btn-sm" href="#" onclick="return false;">Read more</a>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+
+    <!-- Pagination placeholder -->
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" onclick="return false;">Previous</a></li>
+            <li class="page-item active"><a class="page-link" href="#" onclick="return false;">1</a></li>
+            <li class="page-item"><a class="page-link" href="#" onclick="return false;">2</a></li>
+            <li class="page-item"><a class="page-link" href="#" onclick="return false;">3</a></li>
+            <li class="page-item"><a class="page-link" href="#" onclick="return false;">Next</a></li>
+        </ul>
+    </nav>
+</div>

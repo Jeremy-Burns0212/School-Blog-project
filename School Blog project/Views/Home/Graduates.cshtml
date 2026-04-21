@@ -1,5 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Graduates";
+    ViewData["SelectedCategory"] = "Graduates";
 }
-<h1>Graduate Stories</h1>
-<p>Placeholder page for Graduate Stories.</p>
+
+<div class="row">
+    <div class="col-12 col-md-8">
+        @Html.Partial("_ArticleList")  <!-- will render placeholders until model is provided -->
+    </div>
+
+    <aside class="col-12 col-md-4">
+        @Html.Partial("_NewsArchives")
+        @Html.Partial("_MediaContact")
+    </aside>
+</div>

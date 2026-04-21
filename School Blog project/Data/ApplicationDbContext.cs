@@ -5,11 +5,25 @@ using School_Blog_project.Models;
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 namespace School_Blog_project.Data
 {
+	/// <summary>
+	/// EF Core database context for the School Blog application.
+	/// Inherits from <see cref="IdentityDbContext{ApplicationUser}"/> to include identity schema.
+	/// </summary>
 	public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 	{
+		/// <summary>
+		/// DbSet for articles persisted in the application database.
+		/// </summary>
 		public DbSet<Article> Articles { get; set; } = null!;
+
+		/// <summary>
+		/// DbSet for reader seed records.
+		/// </summary>
 		public DbSet<Reader> Readers { get; set; } = null!;
 
+		/// <summary>
+		/// Configures the EF Core model and seeds initial data used for development.
+		/// </summary>
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
@@ -26,12 +40,15 @@ namespace School_Blog_project.Data
 
 			// Seed Articles (uses fixed DatePublished values to mirror SYSUTCDATETIME at insert time)
 			DateTime now = DateTime.UtcNow;
+			// Ensure database column default
+			_ = builder.Entity<Article>().Property(a => a.IsFeatured).HasDefaultValue(false);
+
 			_ = builder.Entity<Article>().HasData(
-				new Article { ArticleID = 1, Title = "DEV: Welcome to the School Blog", Author = "dev_alice", DatePublished = now, ArticleImagePath = null },
-				new Article { ArticleID = 2, Title = "DEV: Editorial Guidelines", Author = "dev_bob", DatePublished = now, ArticleImagePath = null },
-				new Article { ArticleID = 3, Title = "DEV: Student Spotlight", Author = "dev_alice", DatePublished = now, ArticleImagePath = null },
-				new Article { ArticleID = 4, Title = "DEV: Test Article - Writer", Author = "test_writer", DatePublished = now, ArticleImagePath = null },
-				new Article { ArticleID = 5, Title = "DEV: Test Article - Editor", Author = "test_editor", DatePublished = now, ArticleImagePath = null }
+				new Article { ArticleID = 1, Title = "DEV: Welcome to the School Blog", Author = "dev_alice", DatePublished = now, ArticleImagePath = null, IsFeatured = false },
+				new Article { ArticleID = 2, Title = "DEV: Editorial Guidelines", Author = "dev_bob", DatePublished = now, ArticleImagePath = null, IsFeatured = false },
+				new Article { ArticleID = 3, Title = "DEV: Student Spotlight", Author = "dev_alice", DatePublished = now, ArticleImagePath = null, IsFeatured = false },
+				new Article { ArticleID = 4, Title = "DEV: Test Article - Writer", Author = "test_writer", DatePublished = now, ArticleImagePath = null, IsFeatured = false },
+				new Article { ArticleID = 5, Title = "DEV: Test Article - Editor", Author = "test_editor", DatePublished = now, ArticleImagePath = null, IsFeatured = false }
 			);
 		}
 	}

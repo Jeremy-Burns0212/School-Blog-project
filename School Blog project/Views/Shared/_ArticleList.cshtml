@@ -1,24 +1,43 @@
-﻿@using School_Blog_project.Models
+﻿@*
+    Partial view that renders a list of article summaries (expects an IEnumerable<ArticleSummary> model).
+    - Displays a heading derived from ViewData["SelectedCategory"].
+    - If the model is null or empty, renders a set of visual placeholders for layout purposes.
+    - For each article it shows an image area, the title, a formatted date, a short description, 
+      and a "Read more" action.
+    - Contains pagination buttons.
+*@
+@using School_Blog_project.Models
 @model IEnumerable<ArticleSummary>?
 
 @{
+    // Retrieve the selected category from ViewData or default to "All"
     var category = ViewData["SelectedCategory"] as string ?? "All";
+
+    // Define the starting year for articles (hardcoded as 2013)
     var startYear = 2013;
     var currentYear = DateTime.Now.Year;
+
+    // The list of articles passed to the view
     var items = Model;
+
+    // Determine if placeholders should be used (when no articles are available)
     var usePlaceholders = items == null || !items.Any();
     var placeholderCount = 6;
+
+    // Set the heading based on the selected category
     var heading = category == "All" ? "News" : $"{category} Stories";
 }
 
 <div>
     <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Display the heading for the article list -->
         <h1 class="mb-0">@heading</h1>
     </div>
 
     <div class="list-group mb-4">
         @if (usePlaceholders)
         {
+            // Render placeholder articles when no data is available
             for (int i = 1; i <= placeholderCount; i++)
             {
                 <article class="list-group-item list-group-item-action mb-3">
@@ -40,6 +59,7 @@
         }
         else
         {
+            // Render actual articles when data is available
             foreach (var a in items)
             {
                 <article class="list-group-item list-group-item-action mb-3">

@@ -1,9 +1,19 @@
-﻿<div class="card">
+﻿@* Card displaying basic media contact information used in sidebars. 
+   Replace static values with real data or a view model when available. *@
+<div class="card">
     <div class="card-header">Media Contact</div>
     <div class="card-body">
+
+        @* Organization contact role/title *@
         <h6 class="card-title mb-1">Media Relations</h6>
+
+        @* Contact name *@
         <p class="small text-muted mb-1">Jane Doe</p>
+
+        @* Contact phone number *@
         <p class="small text-muted mb-1">Phone: (555) 555-5555</p>
+
+        @* Contact email - use a mailto link *@
         <p class="small text-muted mb-0">Email: <a href="mailto:media@example.edu">media@example.edu</a></p>
     </div>
 </div>

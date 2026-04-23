@@ -1,4 +1,6 @@
-﻿namespace School_Blog_project.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace School_Blog_project.Models
 {
 	/// <summary>
 	/// Represents a reader record used for development and seed data.
@@ -8,6 +10,7 @@
 		/// <summary>
 		/// Primary key for the reader entry.
 		/// </summary>
+		[Key]
 		public int UserID { get; set; }
 
 		/// <summary>
@@ -19,17 +22,5 @@
 		/// Password placeholder for development seed data. Not used for authentication in production.
 		/// </summary>
 		public required string Password { get; set; }
-
-		/// <summary>
-		/// Indicates whether the reader has writer privileges (seed only).
-		/// </summary>
-		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
-		public bool IsWriter { get; set; }
-
-		/// <summary>
-		/// Indicates whether the reader has editor privileges (seed only).
-		/// </summary>
-		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
-		public bool IsEditor { get; set; }
 	}
 }

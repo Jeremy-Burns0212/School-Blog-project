@@ -16,9 +16,9 @@ BEGIN
     CREATE TABLE dbo.Readers (
         UserID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
         Username NVARCHAR(50) NOT NULL,
-        Password NVARCHAR(25) NOT NULL,
-        IsWriter BIT NOT NULL CONSTRAINT DF_Readers_IsWriter DEFAULT (0),
-        IsEditor BIT NOT NULL CONSTRAINT DF_Readers_IsEditor DEFAULT (0)
+        Password NVARCHAR(25) NOT NULL
+        -- NOTE: Role membership is now managed by ASP.NET Identity (AspNetRoles / AspNetUserRoles).
+        -- The IsWriter/IsEditor boolean columns were removed in favor of role-based authorization.
     );
 END
 GO

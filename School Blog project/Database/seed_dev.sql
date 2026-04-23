@@ -26,8 +26,8 @@ GO
 UPDATE dbo.Readers SET IsWriter = 1 WHERE Username = 'dev_carol';
 GO
 
--- Revoke editor from test_both
-UPDATE dbo.Readers SET IsEditor = 0 WHERE Username = 'test_both';
+-- Revoke editor from test_both (use AspNetUserRoles / identity role assignment in production)
+-- UPDATE dbo.AspNetUserRoles ...
 GO
 
 -- Quick verification queries

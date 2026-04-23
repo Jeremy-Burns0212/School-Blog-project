@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace School_Blog_project.Models
 {
 	/// <summary>
@@ -8,6 +11,8 @@ namespace School_Blog_project.Models
 		/// <summary>
 		/// Primary key for the reader.
 		/// </summary>
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int UserID { get; set; }
 
 		/// <summary>

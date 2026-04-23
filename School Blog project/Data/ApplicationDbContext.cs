@@ -17,9 +17,9 @@ namespace School_Blog_project.Data
 		public DbSet<Article> Articles { get; set; } = null!;
 
 		/// <summary>
-		/// DbSet for reader seed records.
+        /// DbSet for reader seed records.
 		/// </summary>
-		public DbSet<Reader> Readers { get; set; } = null!;
+		public DbSet<School_Blog_project.Models.Reader> Readers { get; set; } = null!;
 
 		public DbSet<ArticleCatagory> ArticleCatagories { get; set; } = null!;
 		public DbSet<Categories> Categories { get; set; } = null!;

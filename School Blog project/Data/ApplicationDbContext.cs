@@ -58,7 +58,7 @@ namespace School_Blog_project.Data
 			});
 
 			// Seed Articles (uses fixed DatePublished values to mirror SYSUTCDATETIME at insert time)
-			DateTime now = DateTime.UtcNow;
+			DateTime now = new DateTime(2026, 4, 27, 5, 52, 52, DateTimeKind.Utc);
 			// Ensure database column default
 			_ = builder.Entity<Article>().Property(a => a.IsFeatured).HasDefaultValue(false);
 

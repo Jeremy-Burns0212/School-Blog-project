@@ -9,10 +9,10 @@ using School_Blog_project.Data;
 
 #nullable disable
 
-namespace School_Blog_project.Data.Migrations
+namespace School_Blog_project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260427065813_InitialCreate")]
+    [Migration("20260428205945_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -62,16 +62,13 @@ namespace School_Blog_project.Areas.Identity.Pages.Account
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
 #pragma warning restore CA2254
 
-					// Ensure the default Reader role exists and assign it to the new user
-					const string defaultRole = "Reader";
-
-					// Create the role if it doesn't exist
+					// Assign a default Identity role if desired (e.g., "User").
+					const string defaultRole = "User";
 					if (!await _roleManager.RoleExistsAsync(defaultRole))
 					{
 						IdentityResult roleCreateResult = await _roleManager.CreateAsync(new IdentityRole(defaultRole));
 						if (!roleCreateResult.Succeeded)
 						{
-							// Add role creation errors to ModelState
 							foreach (IdentityError error in roleCreateResult.Errors)
 							{
 								ModelState.AddModelError(string.Empty, error.Description);
@@ -79,20 +76,14 @@ namespace School_Blog_project.Areas.Identity.Pages.Account
 							return Page();
 						}
 					}
-
-					// Assign the role to the user
-					if (!await _userManager.IsInRoleAsync(user, defaultRole))
+					IdentityResult roleResult = await _userManager.AddToRoleAsync(user, defaultRole);
+					if (!roleResult.Succeeded)
 					{
-						IdentityResult roleResult = await _userManager.AddToRoleAsync(user, defaultRole);
-						if (!roleResult.Succeeded)
+						foreach (IdentityError error in roleResult.Errors)
 						{
-							// Add role assignment errors to ModelState
-							foreach (IdentityError error in roleResult.Errors)
-							{
-								ModelState.AddModelError(string.Empty, error.Description);
-							}
-							return Page();
+							ModelState.AddModelError(string.Empty, error.Description);
 						}
+						return Page();
 					}
 
 					await _signInManager.SignInAsync(user, isPersistent: false);

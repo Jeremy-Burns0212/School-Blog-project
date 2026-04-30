@@ -5,6 +5,7 @@ namespace School_Blog_project.Data
 	/// <summary>
 	/// Helper to provision initial roles and admin users for a deployment.
 	/// This file is intentionally not invoked automatically from Program.cs; teams can
+	/// This file is intentionally not invoked automatically from Program.cs; teams can
 	/// edit the static <see cref="SeedAsync"/> method to declare which accounts/roles
 	/// should be created for their environment and then run it from a deployment
 	/// script or a one-off admin tool.
@@ -23,8 +24,8 @@ namespace School_Blog_project.Data
 			RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 			UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-			// Roles to ensure exist
-			string[] roles = ["Reader", "Writer", "Editor"];
+			// Roles to ensure exist (remove 'Reader' if not used)
+			string[] roles = ["Writer", "Editor", "User"];
 			foreach (string? role in roles)
 			{
 				if (!await roleManager.RoleExistsAsync(role))
@@ -40,7 +41,7 @@ namespace School_Blog_project.Data
 				{
 					Email = "Guest@Guest.com",
 					Password = "P@ssw0rd",
-					Roles = new[] { "Reader", "Writer", "Editor" }
+					Roles = new[] { "User", "Writer", "Editor" }
 				}
 			};
 

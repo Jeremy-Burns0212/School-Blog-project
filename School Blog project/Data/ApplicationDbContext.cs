@@ -21,7 +21,7 @@ namespace School_Blog_project.Data
 		/// </summary>
 		public DbSet<School_Blog_project.Models.Reader> Readers { get; set; } = null!;
 
-		public DbSet<ArticleCatagory> ArticleCatagories { get; set; } = null!;
+		public DbSet<ArticleCategory> ArticleCatagories { get; set; } = null!;
 		public DbSet<Categories> Categories { get; set; } = null!;
 
 		/// <summary>
@@ -41,8 +41,8 @@ namespace School_Blog_project.Data
 				new Reader { UserID = 6, Username = "test_both", Password = "dev_pass_6", IsWriter = true, IsEditor = false } // editor revoked in SQL update
 			);
 
-			// Configure the join entity ArticleCatagory: composite key and foreign keys
-			_ = builder.Entity<ArticleCatagory>(eb =>
+			// Configure the join entity ArticleCategory: composite key and foreign keys
+			_ = builder.Entity<ArticleCategory>(eb =>
 			{
 				_ = eb.HasKey(ac => new { ac.ArticleID, ac.CatagoryId });
 

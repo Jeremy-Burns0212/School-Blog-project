@@ -24,6 +24,6 @@ namespace School_Blog_project.Models
 		public required string FullTitle { get; set; }
 
 		// Navigation collection for many-to-many linking to articles
-		public ICollection<ArticleCatagory> ArticleCatagories { get; set; } = [];
+		public ICollection<ArticleCategory> ArticleCatagories { get; set; } = [];
 	}
 }

@@ -1,4 +1,5 @@
-﻿namespace School_Blog_project.Models
+﻿using System.ComponentModel.DataAnnotations;
+namespace School_Blog_project.Models
 {
 	/// <summary>
 	/// Represents a blog article stored in the application database.
@@ -36,7 +37,13 @@
 		/// </summary>
 		public string? ArticleImagePath { get; set; }
 
+		/// <summary>
+		/// Optional short summary/excerpt for preview text. Max length 120.
+		/// </summary>
+		[MaxLength(120)]
+		public string? Description { get; set; }
+
 		// Navigation collection for many-to-many linking to categories
-		public ICollection<ArticleCatagory> ArticleCatagories { get; set; } = [];
+		public ICollection<ArticleCategory> ArticleCategories { get; set; } = [];
 	}
 }

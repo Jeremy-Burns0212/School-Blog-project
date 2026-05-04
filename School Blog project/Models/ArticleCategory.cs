@@ -1,6 +1,6 @@
 ﻿namespace School_Blog_project.Models
 {
-	public class ArticleCatagory
+	public class ArticleCategory
 	{
 		/// <summary>
 		/// The unique identifier for the article. This is a foreign key referencing the ArticleID in the Articles table.

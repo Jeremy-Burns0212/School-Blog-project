@@ -1,6 +1,6 @@
 ﻿namespace School_Blog_project.Models
 {
-	public class ArticleCatagory
+	public class ArticleCategory
 	{
 		/// <summary>
 		/// The unique identifier for the article. This is a foreign key referencing the ArticleID in the Articles table.
@@ -21,6 +21,6 @@
 		/// The category associated with this article. This is a navigation property that allows access to the related Categories entity.
 		/// </summary>
 		/// </summary>
-		public Categories? Catagory { get; set; }
+		public Categories? Category { get; set; }
 	}
 }

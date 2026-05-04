@@ -16,10 +16,10 @@ namespace School_Blog_project.Data
 		/// </summary>
 		public DbSet<Article> Articles { get; set; } = null!;
 
-		/// <summary>
-        /// DbSet for reader seed records.
-		/// </summary>
-		public DbSet<School_Blog_project.Models.Reader> Readers { get; set; } = null!;
+		public DbSet<SiteSettings> SiteSettings { get; set; } = null!;
+		public DbSet<MediaContact> MediaContacts { get; set; } = null!;
+		public DbSet<ColorScheme> ColorSchemes { get; set; } = null!;
+		public DbSet<OffSiteLink> OffSiteLinks { get; set; } = null!;
 
 		public DbSet<ArticleCatagory> ArticleCatagories { get; set; } = null!;
 		public DbSet<Categories> Categories { get; set; } = null!;
@@ -31,15 +31,24 @@ namespace School_Blog_project.Data
 		{
 			base.OnModelCreating(builder);
 
-			// Seed Readers (matches Database/seed_dev.sql inserts and subsequent updates)
-			_ = builder.Entity<Reader>().HasData(
-				new Reader { UserID = 1, Username = "dev_alice", Password = "dev_pass_1", IsWriter = true, IsEditor = false },
-				new Reader { UserID = 2, Username = "dev_bob", Password = "dev_pass_2", IsWriter = false, IsEditor = true },
-				new Reader { UserID = 3, Username = "dev_carol", Password = "dev_pass_3", IsWriter = true, IsEditor = false }, // granted writer in SQL update
-				new Reader { UserID = 4, Username = "test_writer", Password = "dev_pass_4", IsWriter = true, IsEditor = false },
-				new Reader { UserID = 5, Username = "test_editor", Password = "dev_pass_5", IsWriter = false, IsEditor = true },
-				new Reader { UserID = 6, Username = "test_both", Password = "dev_pass_6", IsWriter = true, IsEditor = false } // editor revoked in SQL update
-			);
+			// SiteSettings relationships
+			_ = builder.Entity<SiteSettings>()
+				.HasOne(s => s.MediaContact)
+				.WithOne(mc => mc.SiteSettings)
+				.HasForeignKey<MediaContact>(mc => mc.SiteSettingsId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			_ = builder.Entity<SiteSettings>()
+				.HasOne(s => s.ColorScheme)
+				.WithOne(cs => cs.SiteSettings)
+				.HasForeignKey<ColorScheme>(cs => cs.SiteSettingsId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			_ = builder.Entity<SiteSettings>()
+				.HasMany(s => s.OffSiteLinks)
+				.WithOne(l => l.SiteSettings)
+				.HasForeignKey(l => l.SiteSettingsId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 			// Configure the join entity ArticleCatagory: composite key and foreign keys
 			_ = builder.Entity<ArticleCatagory>(eb =>
@@ -58,7 +67,7 @@ namespace School_Blog_project.Data
 			});
 
 			// Seed Articles (uses fixed DatePublished values to mirror SYSUTCDATETIME at insert time)
-			DateTime now = new DateTime(2026, 4, 27, 5, 52, 52, DateTimeKind.Utc);
+			DateTime now = new(2026, 4, 27, 5, 52, 52, DateTimeKind.Utc);
 			// Ensure database column default
 			_ = builder.Entity<Article>().Property(a => a.IsFeatured).HasDefaultValue(false);
 

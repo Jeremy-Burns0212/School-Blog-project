@@ -17,11 +17,11 @@ namespace School_Blog_project.Data
 		public DbSet<Article> Articles { get; set; } = null!;
 
 		/// <summary>
-        /// DbSet for reader seed records.
+		/// DbSet for reader seed records.
 		/// </summary>
-		public DbSet<School_Blog_project.Models.Reader> Readers { get; set; } = null!;
+		public DbSet<Reader> Readers { get; set; } = null!;
 
-		public DbSet<ArticleCatagory> ArticleCatagories { get; set; } = null!;
+		public DbSet<ArticleCategory> ArticleCategories { get; set; } = null!;
 		public DbSet<Categories> Categories { get; set; } = null!;
 
 		/// <summary>
@@ -41,24 +41,24 @@ namespace School_Blog_project.Data
 				new Reader { UserID = 6, Username = "test_both", Password = "dev_pass_6", IsWriter = true, IsEditor = false } // editor revoked in SQL update
 			);
 
-			// Configure the join entity ArticleCatagory: composite key and foreign keys
-			_ = builder.Entity<ArticleCatagory>(eb =>
+			// Configure the join entity ArticleCategory: composite key and foreign keys
+			_ = builder.Entity<ArticleCategory>(eb =>
 			{
 				_ = eb.HasKey(ac => new { ac.ArticleID, ac.CatagoryId });
 
 				_ = eb.HasOne(ac => ac.Article)
-				  .WithMany(a => a.ArticleCatagories)
+				  .WithMany(a => a.ArticleCategories)
 				  .HasForeignKey(ac => ac.ArticleID)
 				  .OnDelete(DeleteBehavior.Cascade);
 
-				_ = eb.HasOne(ac => ac.Catagory)
-				  .WithMany(c => c.ArticleCatagories)
+				_ = eb.HasOne(ac => ac.Category)
+				  .WithMany(c => c.ArticleCategories)
 				  .HasForeignKey(ac => ac.CatagoryId)
 				  .OnDelete(DeleteBehavior.Cascade);
 			});
 
 			// Seed Articles (uses fixed DatePublished values to mirror SYSUTCDATETIME at insert time)
-			DateTime now = new DateTime(2026, 4, 27, 5, 52, 52, DateTimeKind.Utc);
+			DateTime now = new(2026, 4, 27, 5, 52, 52, DateTimeKind.Utc);
 			// Ensure database column default
 			_ = builder.Entity<Article>().Property(a => a.IsFeatured).HasDefaultValue(false);
 

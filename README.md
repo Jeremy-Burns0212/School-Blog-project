@@ -39,3 +39,13 @@ The site includes four account types:
 
 ## Current Status
 Project is in active development. The basic structure of the website is being established, with initial focus on setting up the MVC architecture, database models, and user authentication system. Future milestones include implementing the article submission workflow, role-based access control, and search functionality.
+
+## Screenshots
+<img width="942" height="441" alt="Screenshot 2026-05-05 140723" src="https://github.com/user-attachments/assets/f7902904-6a7f-4723-a1ae-0dbd10cd1361" />
+<img width="942" height="441" alt="Screenshot 2026-05-05 140843" src="https://github.com/user-attachments/assets/7cad0c07-9e1e-4ef4-9220-3495eb6018e2" />
+<img width="943" height="441" alt="Screenshot 2026-05-05 140940" src="https://github.com/user-attachments/assets/fde11d90-3c8d-4157-82fb-a5ebff3557c3" />
+<img width="942" height="441" alt="Screenshot 2026-05-05 141047" src="https://github.com/user-attachments/assets/2043be67-90c9-40eb-9334-12c77970e4db" />
+
+
+
+

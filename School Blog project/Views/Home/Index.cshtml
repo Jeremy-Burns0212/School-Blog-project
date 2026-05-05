@@ -1,120 +1,129 @@
-﻿@{
+﻿@model School_Blog_project.Models.HomePageViewModel
+
+@{
     ViewData["Title"] = "Home";
 }
 
+<!-- Main page layout -->
 <div class="container py-4">
-    <div class="row">
-        <!-- Left: Featured area (main) -->
+    <div class="row g-4">
+        <!-- Main content column -->
         <main class="col-12 col-lg-8">
-            <!-- Large featured placeholder -->
-            <section class="mb-4">
-                <div class="bg-light border rounded p-3 mb-3" style="min-height:240px;">
-                    <div class="row g-3 align-items-center">
-                        <div class="bg-light border rounded mb-3 p-0 overflow-hidden">
-                            <div class="bg-secondary w-100"
-                                 style="aspect-ratio:16/9; background-size:cover; background-position:center;">
+            <!-- Main featured story -->
+            @if (Model.MainFeaturedStory is not null)
+            {
+                <section class="mb-4">
+                    <div class="border rounded p-3">
+                        <div class="row g-3 align-items-center">
+                            <!-- Featured story image -->
+                            <div class="col-12 col-md-5">
+                                <img src="@Model.MainFeaturedStory.ImageUrl"
+                                     alt="@Model.MainFeaturedStory.Title"
+                                     class="img-fluid rounded w-100" />
+                            </div>
+
+                            <!-- Featured story details -->
+                            <div class="col-12 col-md-7">
+                                <h2 class="h4 mb-1">@Model.MainFeaturedStory.Title</h2>
+                                <p class="text-muted small mb-2">@Model.MainFeaturedStory.DatePublished.ToString("MMM d, yyyy")</p>
+                                <a class="btn btn-sm btn-outline-primary"
+                                   asp-controller="Home"
+                                   asp-action="Articles"
+                                   asp-route-titleSlug="@Model.MainFeaturedStory.Slug">
+                                    Read More
+                                </a>
                             </div>
                         </div>
-                        <div class="col">
-                            <h2 class="h4 mb-1">Featured Story Title (placeholder)</h2>
-                            <p class="text-muted small mb-2">Jan 1, 2026</p>
-                            <a class="btn btn-sm btn-outline-primary" href="#">Read More</a>
-                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            }
 
-            <!-- Featured Stories heading + three placeholders -->
+            <!-- Featured stories list -->
             <section>
                 <h3 class="h5 mb-3">Featured Stories</h3>
-                <div class="list-unstyled">
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-3">
-                            <h4 class="h6 mb-1">Featured Story One</h4>
-                            <p class="text-muted small mb-1">Feb 2, 2026</p>
-                            <p class="mb-2 text-muted">Placeholder description for featured story one.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-3">
-                            <h4 class="h6 mb-1">Featured Story Two</h4>
-                            <p class="text-muted small mb-1">Feb ,1 2026</p>
-                            <p class="mb-2 text-muted">Placeholder description for featured story two.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
+                @if (Model.FeaturedStories.Count > 0)
+                {
+                    @foreach (var story in Model.FeaturedStories)
+                    {
+                        <article class="border rounded p-3 mb-3">
+                            <h4 class="h6 mb-1">@story.Title</h4>
+                            <p class="text-muted small mb-1">@story.DatePublished.ToString("MMM d, yyyy")</p>
 
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-3">
-                            <h4 class="h6 mb-1">Featured Story Three</h4>
-                            <p class="text-muted small mb-1">Jan 28, 2026</p>
-                            <p class="mb-2 text-muted">Placeholder description for featured story three.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
+                            <!-- Optional story description -->
+                            @if (!string.IsNullOrWhiteSpace(story.Description))
+                            {
+                                <p class="mb-2 text-muted">@story.Description</p>
+                            }
+
+                            <a class="text-decoration-none"
+                               asp-controller="Home"
+                               asp-action="Articles"
+                               asp-route-titleSlug="@story.Slug">
+                                Read More
+                            </a>
+                        </article>
+                    }
+                }
             </section>
         </main>
 
-        <!-- Right: News -->
+        <!-- Sidebar column -->
         <aside class="col-12 col-lg-4">
             <section>
                 <h3 class="h5 mb-3">News</h3>
-                <div class="list-unstyled">
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-2">
-                            <h4 class="h6 mb-1">News Item One</h4>
-                            <p class="text-muted small mb-1">Mar 1, 2026</p>
-                            <p class="mb-2 text-muted">Short placeholder summary for news item one.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-2">
-                            <h4 class="h6 mb-1">News Item Two</h4>
-                            <p class="text-muted small mb-1">Feb 25, 2026</p>
-                            <p class="mb-2 text-muted">Short placeholder summary for news item two.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
+                <!-- News stories list -->
+                @if (Model.NewsStories.Count > 0)
+                {
+                    @foreach (var story in Model.NewsStories)
+                    {
+                        <article class="border rounded p-2 mb-3">
+                            <h4 class="h6 mb-1">@story.Title</h4>
+                            <p class="text-muted small mb-1">@story.DatePublished.ToString("MMM d, yyyy")</p>
+                            <a class="text-decoration-none"
+                               asp-controller="Home"
+                               asp-action="Articles"
+                               asp-route-titleSlug="@story.Slug">
+                                Read More
+                            </a>
+                        </article>
+                    }
+                }
 
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-2">
-                            <h4 class="h6 mb-1">News Item Three</h4>
-                            <p class="text-muted small mb-1">Feb 20, 2026</p>
-                            <p class="mb-2 text-muted">Short placeholder summary for news item three.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
+                <!-- News pagination -->
+                @if (Model.TotalNewsPages > 1)
+                {
+                    <nav aria-label="News pagination">
+                        <ul class="pagination">
+                            <li class="page-item @(Model.CurrentNewsPage <= 1 ? "disabled" : "")">
+                                @if (Model.CurrentNewsPage <= 1)
+                                {
+                                    <span class="page-link">Previous</span>
+                                }
+                                else
+                                {
+                                    <a class="page-link" asp-action="Index" asp-route-newsPage="@(Model.CurrentNewsPage - 1)">Previous</a>
+                                }
+                            </li>
 
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-2">
-                            <h4 class="h6 mb-1">News Item Four</h4>
-                            <p class="text-muted small mb-1">Feb 15, 2026</p>
-                            <p class="mb-2 text-muted">Short placeholder summary for news item four.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
+                            <li class="page-item disabled">
+                                <span class="page-link">@Model.CurrentNewsPage / @Model.TotalNewsPages</span>
+                            </li>
 
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-2">
-                            <h4 class="h6 mb-1">News Item Five</h4>
-                            <p class="text-muted small mb-1">Feb 10, 2026</p>
-                            <p class="mb-2 text-muted">Short placeholder summary for news item five.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="bg-light border rounded p-2">
-                            <h4 class="h6 mb-1">News Item Six</h4>
-                            <p class="text-muted small mb-1">Feb 5, 2026</p>
-                            <p class="mb-2 text-muted">Short placeholder summary for news item six.</p>
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">READ MORE</a>
-                        </div>
-                    </div>
+                            <li class="page-item @(Model.CurrentNewsPage >= Model.TotalNewsPages ? "disabled" : "")">
+                                @if (Model.CurrentNewsPage >= Model.TotalNewsPages)
+                                {
+                                    <span class="page-link">Next</span>
+                                }
+                                else
+                                {
+                                    <a class="page-link" asp-action="Index" asp-route-newsPage="@(Model.CurrentNewsPage + 1)">Next</a>
+                                }
+                            </li>
+                        </ul>
+                    </nav>
+                }
             </section>
         </aside>
     </div>

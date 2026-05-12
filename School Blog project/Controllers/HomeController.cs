@@ -122,35 +122,56 @@ namespace School_Blog_project.Controllers
 		}
 
 		/// <summary>
-		/// Returns the students information page view.
+		/// Returns the students information page view with paginated articles categorized under "Student Stories" or "Students".
 		/// </summary>
-		public IActionResult Students()
+		public async Task<IActionResult> Students(int page = 1)
 		{
-			return View();
+			return View(await ArticleListingFactory.CreateCategoryPageAsync(
+				_context,
+				heading: "Student Stories",
+				actionName: nameof(Students),
+				page: page,
+				pageSize: 6,
+				categoryAliases: ["Student Stories", "Students"]));
 		}
 
 		/// <summary>
-		/// Returns the graduates information page view.
+		/// Returns the graduates information page view with paginated articles categorized under "Graduate Stories" or "Graduates".
 		/// </summary>
-		public IActionResult Graduates()
+		public async Task<IActionResult> Graduates(int page = 1)
 		{
-			return View();
+			return View(await ArticleListingFactory.CreateCategoryPageAsync(
+				_context,
+				heading: "Graduate Stories",
+				actionName: nameof(Graduates),
+				page: page,
+				pageSize: 6,
+				categoryAliases: ["Graduate Stories", "Graduates"]));
 		}
 
 		/// <summary>
-		/// Returns the faculty information page view.
+		/// Returns the faculty information page view with paginated articles categorized under "Faculty & Staff Stories", "Faculty & Staff", or "Faculty".
 		/// </summary>
-		public IActionResult Faculty()
+		public async Task<IActionResult> Faculty(int page = 1)
 		{
-			return View();
+			return View(await ArticleListingFactory.CreateCategoryPageAsync(
+				_context,
+				heading: "Faculty & Staff Stories",
+				actionName: nameof(Faculty),
+				page: page,
+				pageSize: 6,
+				categoryAliases: ["Faculty & Staff Stories", "Faculty & Staff", "Faculty"]));
 		}
 
 		/// <summary>
-		/// Returns the news listing view.
+		/// Returns the news listing view with paginated articles categorized under "News".
 		/// </summary>
-		public IActionResult News()
+		public async Task<IActionResult> News(int page = 1)
 		{
-			return View();
+			return View(await ArticleListingFactory.CreateNewsPageAsync(
+				_context,
+				page: page,
+				pageSize: 6));
 		}
 
 		/// <summary>

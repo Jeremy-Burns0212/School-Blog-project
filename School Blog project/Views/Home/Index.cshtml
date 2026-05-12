@@ -2,6 +2,10 @@
 
 @{
     ViewData["Title"] = "Home";
+
+    var startPage = Math.Max(1, Model.CurrentNewsPage - 1);
+    var endPage = Math.Min(Model.TotalNewsPages, Model.CurrentNewsPage + 1);
+    var showLastPageSeparately = Model.TotalNewsPages > 1 && endPage < Model.TotalNewsPages;
 }
 
 <!-- Main page layout -->
@@ -10,60 +14,72 @@
         <!-- Main content column -->
         <main class="col-12 col-lg-8">
             <!-- Main featured story -->
-            @if (Model.MainFeaturedStory is not null)
-            {
-                <section class="mb-4">
-                    <div class="border rounded p-3">
-                        <div class="row g-3 align-items-center">
-                            <!-- Featured story image -->
-                            <div class="col-12 col-md-5">
-                                <img src="@Model.MainFeaturedStory.ImageUrl"
-                                     alt="@Model.MainFeaturedStory.Title"
-                                     class="img-fluid rounded w-100" />
-                            </div>
+            <section class="mb-4">
+                <div class="border rounded p-3 @(Model.MainFeaturedStory?.IsPlaceholder == true ? "bg-light" : "")"
+                     style="@(Model.MainFeaturedStory?.IsPlaceholder == true ? "border-style:dashed;" : "")">
+                    <div class="d-flex flex-column">
+                        <!-- Featured story image -->
+                        <div class="d-flex justify-content-center mb-3">
+                            <img src="@Model.MainFeaturedStory!.ImageUrl"
+                                 alt="@Model.MainFeaturedStory.Title"
+                                 class="img-fluid rounded"
+                                 style="max-width:100%;" />
+                        </div>
 
-                            <!-- Featured story details -->
-                            <div class="col-12 col-md-7">
-                                <h2 class="h4 mb-1">@Model.MainFeaturedStory.Title</h2>
+                        <!-- Featured story details -->
+                        <div class="text-start">
+                            <h2 class="h4 mb-1">@Model.MainFeaturedStory.Title</h2>
+
+                            @if (Model.MainFeaturedStory.IsPlaceholder)
+                            {
+                                <p class="text-muted small mb-2">Coming soon</p>
+                            }
+                            else
+                            {
                                 <p class="text-muted small mb-2">@Model.MainFeaturedStory.DatePublished.ToString("MMM d, yyyy")</p>
                                 <a class="btn btn-sm btn-outline-primary"
-                                   asp-controller="Home"
-                                   asp-action="Articles"
-                                   asp-route-titleSlug="@Model.MainFeaturedStory.Slug">
+                                       asp-controller="Home"
+                                       asp-action="Articles"
+                                       asp-route-titleSlug="@Model.MainFeaturedStory.Slug">
                                     Read More
                                 </a>
-                            </div>
+                            }
                         </div>
                     </div>
-                </section>
-            }
+                </div>
+            </section>
 
             <!-- Featured stories list -->
             <section>
                 <h3 class="h5 mb-3">Featured Stories</h3>
 
-                @if (Model.FeaturedStories.Count > 0)
+                @foreach (var story in Model.FeaturedStories)
                 {
-                    @foreach (var story in Model.FeaturedStories)
-                    {
-                        <article class="border rounded p-3 mb-3">
-                            <h4 class="h6 mb-1">@story.Title</h4>
+                    <article class="border rounded p-3 mb-3 @(story.IsPlaceholder ? "bg-light" : "")"
+                             style="@(story.IsPlaceholder ? "border-style:dashed;" : "")">
+                        <h4 class="h6 mb-1">@story.Title</h4>
+
+                        @if (story.IsPlaceholder)
+                        {
+                            <p class="text-muted small mb-0">Coming soon</p>
+                        }
+                        else
+                        {
                             <p class="text-muted small mb-1">@story.DatePublished.ToString("MMM d, yyyy")</p>
 
-                            <!-- Optional story description -->
                             @if (!string.IsNullOrWhiteSpace(story.Description))
                             {
                                 <p class="mb-2 text-muted">@story.Description</p>
                             }
 
                             <a class="text-decoration-none"
-                               asp-controller="Home"
-                               asp-action="Articles"
-                               asp-route-titleSlug="@story.Slug">
+                                   asp-controller="Home"
+                                   asp-action="Articles"
+                                   asp-route-titleSlug="@story.Slug">
                                 Read More
                             </a>
-                        </article>
-                    }
+                        }
+                    </article>
                 }
             </section>
         </main>
@@ -73,57 +89,91 @@
             <section>
                 <h3 class="h5 mb-3">News</h3>
 
-                <!-- News stories list -->
-                @if (Model.NewsStories.Count > 0)
+                @foreach (var story in Model.NewsStories)
                 {
-                    @foreach (var story in Model.NewsStories)
-                    {
-                        <article class="border rounded p-2 mb-3">
-                            <h4 class="h6 mb-1">@story.Title</h4>
+                    <article class="border rounded p-2 mb-3 @(story.IsPlaceholder ? "bg-light" : "")"
+                             style="@(story.IsPlaceholder ? "border-style:dashed;" : "")">
+                        <h4 class="h6 mb-1">@story.Title</h4>
+
+                        @if (story.IsPlaceholder)
+                        {
+                            <p class="text-muted small mb-0">Coming soon</p>
+                        }
+                        else
+                        {
                             <p class="text-muted small mb-1">@story.DatePublished.ToString("MMM d, yyyy")</p>
                             <a class="text-decoration-none"
-                               asp-controller="Home"
-                               asp-action="Articles"
-                               asp-route-titleSlug="@story.Slug">
+                                   asp-controller="Home"
+                                   asp-action="Articles"
+                                   asp-route-titleSlug="@story.Slug">
                                 Read More
                             </a>
-                        </article>
-                    }
+                        }
+                    </article>
                 }
 
                 <!-- News pagination -->
-                @if (Model.TotalNewsPages > 1)
-                {
-                    <nav aria-label="News pagination">
-                        <ul class="pagination">
-                            <li class="page-item @(Model.CurrentNewsPage <= 1 ? "disabled" : "")">
-                                @if (Model.CurrentNewsPage <= 1)
+                <nav aria-label="News pagination">
+                    <ul class="pagination">
+                        <!-- Previous page button -->
+                        <li class="page-item @(Model.CurrentNewsPage <= 1 ? "disabled" : "")">
+                            @if (Model.CurrentNewsPage <= 1)
+                            {
+                                <span class="page-link">Previous</span>
+                            }
+                            else
+                            {
+                                <a class="page-link" asp-action="Index" asp-route-newsPage="@(Model.CurrentNewsPage - 1)">Previous</a>
+                            }
+                        </li>
+
+                        <!-- Page number links near the current page -->
+                        @for (var pageNumber = startPage; pageNumber <= endPage; pageNumber++)
+                        {
+                            <li class="page-item @(pageNumber == Model.CurrentNewsPage ? "active" : "")">
+                                @if (pageNumber == Model.CurrentNewsPage)
                                 {
-                                    <span class="page-link">Previous</span>
+                                    <span class="page-link">@pageNumber</span>
                                 }
                                 else
                                 {
-                                    <a class="page-link" asp-action="Index" asp-route-newsPage="@(Model.CurrentNewsPage - 1)">Previous</a>
+                                    <a class="page-link" asp-action="Index" asp-route-newsPage="@pageNumber">@pageNumber</a>
                                 }
                             </li>
+                        }
 
+                        <!-- Last page link when it is not already shown -->
+                        @if (showLastPageSeparately)
+                        {
                             <li class="page-item disabled">
-                                <span class="page-link">@Model.CurrentNewsPage / @Model.TotalNewsPages</span>
+                                <span class="page-link">...</span>
                             </li>
 
-                            <li class="page-item @(Model.CurrentNewsPage >= Model.TotalNewsPages ? "disabled" : "")">
-                                @if (Model.CurrentNewsPage >= Model.TotalNewsPages)
+                            <li class="page-item @(Model.CurrentNewsPage == Model.TotalNewsPages ? "active" : "")">
+                                @if (Model.CurrentNewsPage == Model.TotalNewsPages)
                                 {
-                                    <span class="page-link">Next</span>
+                                    <span class="page-link">@Model.TotalNewsPages</span>
                                 }
                                 else
                                 {
-                                    <a class="page-link" asp-action="Index" asp-route-newsPage="@(Model.CurrentNewsPage + 1)">Next</a>
+                                    <a class="page-link" asp-action="Index" asp-route-newsPage="@Model.TotalNewsPages">@Model.TotalNewsPages</a>
                                 }
                             </li>
-                        </ul>
-                    </nav>
-                }
+                        }
+
+                        <!-- Next page button -->
+                        <li class="page-item @(Model.CurrentNewsPage >= Model.TotalNewsPages ? "disabled" : "")">
+                            @if (Model.CurrentNewsPage >= Model.TotalNewsPages)
+                            {
+                                <span class="page-link">Next</span>
+                            }
+                            else
+                            {
+                                <a class="page-link" asp-action="Index" asp-route-newsPage="@(Model.CurrentNewsPage + 1)">Next</a>
+                            }
+                        </li>
+                    </ul>
+                </nav>
             </section>
         </aside>
     </div>

@@ -25,26 +25,6 @@ namespace School_Blog_project.Data
 		public DbSet<Categories> Categories { get; set; } = null!;
 
 		/// <summary>
-		/// DbSet for site settings.
-		/// </summary>
-		public DbSet<SiteSettings> SiteSettings { get; set; } = null!;
-
-		/// <summary>
-		/// DbSet for media contact information.
-		/// </summary>
-		public DbSet<MediaContact> MediaContacts { get; set; } = null!;
-
-		/// <summary>
-		/// DbSet for color scheme configuration.
-		/// </summary>
-		public DbSet<ColorScheme> ColorSchemes { get; set; } = null!;
-
-		/// <summary>
-		/// DbSet for off-site links.
-		/// </summary>
-		public DbSet<OffSiteLink> OffSiteLinks { get; set; } = null!;
-
-		/// <summary>
 		/// Configures the EF Core model and seeds initial data used for development.
 		/// </summary>
 		protected override void OnModelCreating(ModelBuilder builder)
@@ -89,34 +69,6 @@ namespace School_Blog_project.Data
 				new Article { ArticleID = 4, Title = "DEV: Test Article - Writer", Author = "test_writer", DatePublished = now, ArticleImagePath = null, IsFeatured = false },
 				new Article { ArticleID = 5, Title = "DEV: Test Article - Editor", Author = "test_editor", DatePublished = now, ArticleImagePath = null, IsFeatured = false }
 			);
-
-			// Configure SiteSettings relationships
-			// MediaContact: one-to-one with SiteSettings
-			_ = builder.Entity<MediaContact>(eb =>
-			{
-				_ = eb.HasOne(mc => mc.SiteSettings)
-					.WithOne(ss => ss.MediaContact)
-					.HasForeignKey<MediaContact>(mc => mc.SiteSettingsId)
-					.OnDelete(DeleteBehavior.Cascade);
-			});
-
-			// ColorScheme: one-to-one with SiteSettings
-			_ = builder.Entity<ColorScheme>(eb =>
-			{
-				_ = eb.HasOne(cs => cs.SiteSettings)
-					.WithOne(ss => ss.ColorScheme)
-					.HasForeignKey<ColorScheme>(cs => cs.SiteSettingsId)
-					.OnDelete(DeleteBehavior.Cascade);
-			});
-
-			// OffSiteLink: one-to-many with SiteSettings
-			_ = builder.Entity<OffSiteLink>(eb =>
-			{
-				_ = eb.HasOne(osl => osl.SiteSettings)
-					.WithMany(ss => ss.OffSiteLinks)
-					.HasForeignKey(osl => osl.SiteSettingsId)
-					.OnDelete(DeleteBehavior.Cascade);
-			});
 		}
 	}
 }

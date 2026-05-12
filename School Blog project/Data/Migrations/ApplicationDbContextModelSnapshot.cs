@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School_Blog_project.Data;
 
 #nullable disable
 
-namespace School_Blog_project.Migrations
+namespace School_Blog_project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260512211552_InitialCreate")]
-    partial class InitialCreate
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -341,80 +338,6 @@ namespace School_Blog_project.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("School_Blog_project.Models.ColorScheme", b =>
-                {
-                    b.Property<int>("SiteSettingsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Color1")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
-
-                    b.Property<string>("Color2")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
-
-                    b.HasKey("SiteSettingsId");
-
-                    b.ToTable("ColorSchemes");
-                });
-
-            modelBuilder.Entity("School_Blog_project.Models.MediaContact", b =>
-                {
-                    b.Property<int>("SiteSettingsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(254)
-                        .HasColumnType("nvarchar(254)");
-
-                    b.Property<string>("FullName")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("JobPosition")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("SiteSettingsId");
-
-                    b.ToTable("MediaContacts");
-                });
-
-            modelBuilder.Entity("School_Blog_project.Models.OffSiteLink", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<int>("SiteSettingsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("URL")
-                        .IsRequired()
-                        .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SiteSettingsId");
-
-                    b.ToTable("OffSiteLinks");
-                });
-
             modelBuilder.Entity("School_Blog_project.Models.Reader", b =>
                 {
                     b.Property<int>("UserID")
@@ -491,47 +414,6 @@ namespace School_Blog_project.Migrations
                         });
                 });
 
-            modelBuilder.Entity("School_Blog_project.Models.SiteSettings", b =>
-                {
-                    b.Property<int>("SiteSettingsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SiteSettingsId"));
-
-                    b.Property<string>("SchoolAcronym")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("SchoolBlurb")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("SchoolEmblem")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("SchoolLogo")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("SchoolName")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<int>("StartYear")
-                        .HasColumnType("int");
-
-                    b.HasKey("SiteSettingsId");
-
-                    b.ToTable("SiteSettings");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -602,39 +484,6 @@ namespace School_Blog_project.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("School_Blog_project.Models.ColorScheme", b =>
-                {
-                    b.HasOne("School_Blog_project.Models.SiteSettings", "SiteSettings")
-                        .WithOne("ColorScheme")
-                        .HasForeignKey("School_Blog_project.Models.ColorScheme", "SiteSettingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SiteSettings");
-                });
-
-            modelBuilder.Entity("School_Blog_project.Models.MediaContact", b =>
-                {
-                    b.HasOne("School_Blog_project.Models.SiteSettings", "SiteSettings")
-                        .WithOne("MediaContact")
-                        .HasForeignKey("School_Blog_project.Models.MediaContact", "SiteSettingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SiteSettings");
-                });
-
-            modelBuilder.Entity("School_Blog_project.Models.OffSiteLink", b =>
-                {
-                    b.HasOne("School_Blog_project.Models.SiteSettings", "SiteSettings")
-                        .WithMany("OffSiteLinks")
-                        .HasForeignKey("SiteSettingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SiteSettings");
-                });
-
             modelBuilder.Entity("School_Blog_project.Models.Article", b =>
                 {
                     b.Navigation("ArticleCategories");
@@ -643,15 +492,6 @@ namespace School_Blog_project.Migrations
             modelBuilder.Entity("School_Blog_project.Models.Categories", b =>
                 {
                     b.Navigation("ArticleCategories");
-                });
-
-            modelBuilder.Entity("School_Blog_project.Models.SiteSettings", b =>
-                {
-                    b.Navigation("ColorScheme");
-
-                    b.Navigation("MediaContact");
-
-                    b.Navigation("OffSiteLinks");
                 });
 #pragma warning restore 612, 618
         }

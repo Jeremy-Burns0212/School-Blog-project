@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Database\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

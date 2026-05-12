@@ -10,7 +10,7 @@ namespace School_Blog_project.Controllers
 	public class HomeController : Controller
 	{
 		private const int NewsPageSize = 6;
-		private const string PlaceholderImageUrl = "https://via.placeholder.com/1200x675?text=No+Thumbnail";
+		private const string PlaceholderImageUrl = AssetPaths.PlaceholderImage;
 
 		private readonly ApplicationDbContext _context;
 

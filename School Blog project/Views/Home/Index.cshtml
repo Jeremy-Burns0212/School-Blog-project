@@ -10,21 +10,27 @@
         <!-- Main content column -->
         <main class="col-12 col-lg-8">
             <!-- Main featured story -->
-            @if (Model.MainFeaturedStory is not null)
-            {
-                <section class="mb-4">
-                    <div class="border rounded p-3">
-                        <div class="row g-3 align-items-center">
-                            <!-- Featured story image -->
-                            <div class="col-12 col-md-5">
-                                <img src="@Model.MainFeaturedStory.ImageUrl"
-                                     alt="@Model.MainFeaturedStory.Title"
-                                     class="img-fluid rounded w-100" />
-                            </div>
+            <section class="mb-4">
+                <div class="border rounded p-3 @(Model.MainFeaturedStory?.IsPlaceholder == true ? "bg-light" : "")"
+                     style="@(Model.MainFeaturedStory?.IsPlaceholder == true ? "border-style:dashed;" : "")">
+                    <div class="row g-3 align-items-center">
+                        <!-- Featured story image -->
+                        <div class="col-12 col-md-5">
+                            <img src="@Model.MainFeaturedStory!.ImageUrl"
+                                 alt="@Model.MainFeaturedStory.Title"
+                                 class="img-fluid rounded w-100" />
+                        </div>
 
-                            <!-- Featured story details -->
-                            <div class="col-12 col-md-7">
-                                <h2 class="h4 mb-1">@Model.MainFeaturedStory.Title</h2>
+                        <!-- Featured story details -->
+                        <div class="col-12 col-md-7">
+                            <h2 class="h4 mb-1">@Model.MainFeaturedStory.Title</h2>
+
+                            @if (Model.MainFeaturedStory.IsPlaceholder)
+                            {
+                                <p class="text-muted small mb-2">Coming soon</p>
+                            }
+                            else
+                            {
                                 <p class="text-muted small mb-2">@Model.MainFeaturedStory.DatePublished.ToString("MMM d, yyyy")</p>
                                 <a class="btn btn-sm btn-outline-primary"
                                    asp-controller="Home"
@@ -32,22 +38,28 @@
                                    asp-route-titleSlug="@Model.MainFeaturedStory.Slug">
                                     Read More
                                 </a>
-                            </div>
+                            }
                         </div>
                     </div>
-                </section>
-            }
+                </div>
+            </section>
 
             <!-- Featured stories list -->
             <section>
                 <h3 class="h5 mb-3">Featured Stories</h3>
 
-                @if (Model.FeaturedStories.Count > 0)
+                @foreach (var story in Model.FeaturedStories)
                 {
-                    @foreach (var story in Model.FeaturedStories)
-                    {
-                        <article class="border rounded p-3 mb-3">
-                            <h4 class="h6 mb-1">@story.Title</h4>
+                    <article class="border rounded p-3 mb-3 @(story.IsPlaceholder ? "bg-light" : "")"
+                             style="@(story.IsPlaceholder ? "border-style:dashed;" : "")">
+                        <h4 class="h6 mb-1">@story.Title</h4>
+
+                        @if (story.IsPlaceholder)
+                        {
+                            <p class="text-muted small mb-0">Coming soon</p>
+                        }
+                        else
+                        {
                             <p class="text-muted small mb-1">@story.DatePublished.ToString("MMM d, yyyy")</p>
 
                             <!-- Optional story description -->
@@ -62,8 +74,8 @@
                                asp-route-titleSlug="@story.Slug">
                                 Read More
                             </a>
-                        </article>
-                    }
+                        }
+                    </article>
                 }
             </section>
         </main>
@@ -74,12 +86,18 @@
                 <h3 class="h5 mb-3">News</h3>
 
                 <!-- News stories list -->
-                @if (Model.NewsStories.Count > 0)
+                @foreach (var story in Model.NewsStories)
                 {
-                    @foreach (var story in Model.NewsStories)
-                    {
-                        <article class="border rounded p-2 mb-3">
-                            <h4 class="h6 mb-1">@story.Title</h4>
+                    <article class="border rounded p-2 mb-3 @(story.IsPlaceholder ? "bg-light" : "")"
+                             style="@(story.IsPlaceholder ? "border-style:dashed;" : "")">
+                        <h4 class="h6 mb-1">@story.Title</h4>
+
+                        @if (story.IsPlaceholder)
+                        {
+                            <p class="text-muted small mb-0">Coming soon</p>
+                        }
+                        else
+                        {
                             <p class="text-muted small mb-1">@story.DatePublished.ToString("MMM d, yyyy")</p>
                             <a class="text-decoration-none"
                                asp-controller="Home"
@@ -87,8 +105,8 @@
                                asp-route-titleSlug="@story.Slug">
                                 Read More
                             </a>
-                        </article>
-                    }
+                        }
+                    </article>
                 }
 
                 <!-- News pagination -->

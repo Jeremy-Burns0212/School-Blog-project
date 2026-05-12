@@ -44,7 +44,7 @@ namespace School_Blog_project.Models
 		/// <summary>
 		/// Gets the unique identifier for the article.
 		/// </summary>
-		public int ArticleId { get; init; }
+		public int ArticleID { get; init; }
 
 		/// <summary>
 		/// Gets the title associated with the article.
@@ -70,5 +70,10 @@ namespace School_Blog_project.Models
 		/// Gets the URL-friendly slug for the article.
 		/// </summary>
 		public required string Slug { get; init; }
+
+		/// <summary>
+		/// Indicates whether this item is a placeholder.
+		/// </summary>
+		public bool IsPlaceholder { get; init; }
 	}
 }

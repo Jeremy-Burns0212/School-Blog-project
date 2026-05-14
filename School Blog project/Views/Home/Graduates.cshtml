@@ -1,17 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Graduates";
-    ViewData["SelectedCategory"] = "Graduates";
+﻿@model School_Blog_project.Models.ArticleListingPageViewModel
+
+@{
+    // Set the browser title.
+    ViewData["Title"] = Model.Heading;
 }
 
 <div class="row">
-    @* Main article list partial view (renders placeholder articles until model is provided) *@
+    <!-- Main content -->
     <div class="col-12 col-md-8">
-        @Html.Partial("_ArticleList")
+        @await Html.PartialAsync("_ArticleList", Model)
     </div>
 
-    @* Sidebar: links to news archives years cascading down, followed by the media contact information *@
+    <!-- Sidebar content -->
     <aside class="col-12 col-md-4">
-        @Html.Partial("_NewsArchives")
-        @Html.Partial("_MediaContact")
+        @await Html.PartialAsync("_NewsArchives", Model.NewsArchives)
+        @await Html.PartialAsync("_MediaContact")
     </aside>
 </div>

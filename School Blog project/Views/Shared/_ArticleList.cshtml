@@ -1,94 +1,144 @@
-﻿@*
-    Partial view that renders a list of article summaries (expects an IEnumerable<ArticleSummary> model).
-    - Displays a heading derived from ViewData["SelectedCategory"].
-    - If the model is null or empty, renders a set of visual placeholders for layout purposes.
-    - For each article it shows an image area, the title, a formatted date, a short description, 
-      and a "Read more" action.
-    - Contains pagination buttons.
-*@
-@using School_Blog_project.Models
-@model IEnumerable<ArticleSummary>?
+﻿@model School_Blog_project.Models.ArticleListingPageViewModel
 
 @{
-    // Retrieve the selected category from ViewData or default to "All"
-    var category = ViewData["SelectedCategory"] as string ?? "All";
-
-    // Define the starting year for articles (hardcoded as 2013)
-    var startYear = 2013;
-    var currentYear = DateTime.Now.Year;
-
-    // The list of articles passed to the view
-    var items = Model;
-
-    // Determine if placeholders should be used (when no articles are available)
-    var usePlaceholders = items == null || !items.Any();
-    var placeholderCount = 6;
-
-    // Set the heading based on the selected category
-    var heading = category == "All" ? "News" : $"{category} Stories";
+    // Build the pagination window.
+    var startPage = Math.Max(1, Model.CurrentPage - 1);
+    var endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 1);
+    var showLastPageSeparately = Model.TotalPages > 1 && endPage < Model.TotalPages;
 }
 
 <div>
+    <!-- Page heading -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <!-- Display the heading for the article list -->
-        <h1 class="mb-0">@heading</h1>
+        <h1 class="mb-0">@Model.Heading</h1>
     </div>
 
+    <!-- Article list -->
     <div class="list-group mb-4">
-        @if (usePlaceholders)
+        @foreach (var story in Model.Articles)
         {
-            // Render placeholder articles when no data is available
-            for (int i = 1; i <= placeholderCount; i++)
-            {
-                <article class="list-group-item list-group-item-action mb-3">
-                    <div class="row g-3">
-                        <div class="col-12 col-sm-3 d-flex align-items-center justify-content-center">
-                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width:120px;height:80px;">
-                                Image
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-9">
-                            <h5 class="mb-1">Article Title Placeholder @i</h5>
-                            <small class="text-muted">January 1, @currentYear</small>
-                            <p class="mb-1 mt-2 text-muted">Short excerpt placeholder text to show layout only.</p>
-                            <a class="btn btn-outline-primary btn-sm" href="#" onclick="return false;">Read more</a>
-                        </div>
+            <article class="list-group-item list-group-item-action mb-3 @(story.IsPlaceholder ? "bg-light" : "")"
+                     style="@(story.IsPlaceholder ? "border-style:dashed;" : "")">
+                <div class="row g-3">
+                    <!-- Thumbnail -->
+                    <div class="col-12 col-sm-3 d-flex align-items-center justify-content-center">
+                        <img src="@story.ImageUrl"
+                             alt="@story.Title"
+                             class="img-fluid rounded"
+                             style="max-width:120px; max-height:80px; object-fit:cover;" />
                     </div>
-                </article>
-            }
-        }
-        else
-        {
-            // Render actual articles when data is available
-            foreach (var a in items)
-            {
-                <article class="list-group-item list-group-item-action mb-3">
-                    <div class="row g-3">
-                        <div class="col-12 col-sm-3 d-flex align-items-center justify-content-center">
-                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width:120px;height:80px;">
-                                @(!string.IsNullOrEmpty(a.ImageUrl) ? "Image" : "Image")
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-9">
-                            <h5 class="mb-1">@a.Title</h5>
-                            <small class="text-muted">@a.Date.ToString("MMMM d, yyyy")</small>
-                            <p class="mb-1 mt-2 text-muted">@a.Description</p>
-                            <a class="btn btn-outline-primary btn-sm" href="#" onclick="return false;">Read more</a>
-                        </div>
+
+                    <!-- Story details -->
+                    <div class="col-12 col-sm-9">
+                        <!-- Title -->
+                        <h5 class="mb-1">@story.Title</h5>
+
+                        @if (story.IsPlaceholder)
+                        {
+                            <!-- Placeholder message -->
+                            <p class="text-muted small mb-0">Coming soon</p>
+                        }
+                        else
+                        {
+                            <!-- Publish date -->
+                            <small class="text-muted">@story.Date.ToString("MMMM d, yyyy")</small>
+
+                            @if (!string.IsNullOrWhiteSpace(story.Description))
+                            {
+                                <!-- Short summary -->
+                                <p class="mb-1 mt-2 text-muted">@story.Description</p>
+                            }
+
+                            <!-- Read-more link -->
+                            <a class="btn btn-outline-primary btn-sm"
+                               asp-controller="Home"
+                               asp-action="Articles"
+                               asp-route-titleSlug="@story.Slug">
+                                Read more
+                            </a>
+                        }
                     </div>
-                </article>
-            }
+                </div>
+            </article>
         }
     </div>
 
-    <!-- Pagination placeholder -->
+    <!-- Pagination controls -->
     <nav aria-label="Pagination">
         <ul class="pagination">
-            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" onclick="return false;">Previous</a></li>
-            <li class="page-item active"><a class="page-link" href="#" onclick="return false;">1</a></li>
-            <li class="page-item"><a class="page-link" href="#" onclick="return false;">2</a></li>
-            <li class="page-item"><a class="page-link" href="#" onclick="return false;">3</a></li>
-            <li class="page-item"><a class="page-link" href="#" onclick="return false;">Next</a></li>
+            <!-- Previous page -->
+            <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">
+                @if (Model.CurrentPage <= 1)
+                {
+                    <span class="page-link">Previous</span>
+                }
+                else
+                {
+                    <a class="page-link"
+                       asp-controller="Home"
+                       asp-action="@Model.ActionName"
+                       asp-route-page="@(Model.CurrentPage - 1)"
+                       asp-all-route-data="Model.RouteValues">Previous</a>
+                }
+            </li>
+
+            <!-- Nearby page numbers -->
+            @for (var pageNumber = startPage; pageNumber <= endPage; pageNumber++)
+            {
+                <li class="page-item @(pageNumber == Model.CurrentPage ? "active" : "")">
+                    @if (pageNumber == Model.CurrentPage)
+                    {
+                        <span class="page-link">@pageNumber</span>
+                    }
+                    else
+                    {
+                        <a class="page-link"
+                           asp-controller="Home"
+                           asp-action="@Model.ActionName"
+                           asp-route-page="@pageNumber"
+                           asp-all-route-data="Model.RouteValues">@pageNumber</a>
+                    }
+                </li>
+            }
+
+            <!-- Last page shortcut -->
+            @if (showLastPageSeparately)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "active" : "")">
+                    @if (Model.CurrentPage == Model.TotalPages)
+                    {
+                        <span class="page-link">@Model.TotalPages</span>
+                    }
+                    else
+                    {
+                        <a class="page-link"
+                           asp-controller="Home"
+                           asp-action="@Model.ActionName"
+                           asp-route-page="@Model.TotalPages"
+                           asp-all-route-data="Model.RouteValues">@Model.TotalPages</a>
+                    }
+                </li>
+            }
+
+            <!-- Next page -->
+            <li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+                @if (Model.CurrentPage >= Model.TotalPages)
+                {
+                    <span class="page-link">Next</span>
+                }
+                else
+                {
+                    <a class="page-link"
+                       asp-controller="Home"
+                       asp-action="@Model.ActionName"
+                       asp-route-page="@(Model.CurrentPage + 1)"
+                       asp-all-route-data="Model.RouteValues">Next</a>
+                }
+            </li>
         </ul>
     </nav>
 </div>

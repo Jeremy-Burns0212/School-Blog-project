@@ -29,6 +29,16 @@
 		public string? ImageUrl { get; set; }
 
 		/// <summary>
+		/// A URL-friendly slug for linking to the full article.
+		/// </summary>
+		public string Slug { get; set; } = string.Empty;
+
+		/// <summary>
+		/// Indicates whether this item is a placeholder.
+		/// </summary>
+		public bool IsPlaceholder { get; set; }
+
+		/// <summary>
 		/// A list of categories to which the article belongs.
 		/// Needs to be a list because an article can belong to multiple categories.
 		/// </summary>

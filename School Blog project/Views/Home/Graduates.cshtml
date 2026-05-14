@@ -13,7 +13,7 @@
 
     <!-- Sidebar content -->
     <aside class="col-12 col-md-4">
-        @await Html.PartialAsync("_NewsArchives")
+        @await Html.PartialAsync("_NewsArchives", Model.NewsArchives)
         @await Html.PartialAsync("_MediaContact")
     </aside>
 </div>

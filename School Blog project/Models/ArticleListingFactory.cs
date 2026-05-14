@@ -5,62 +5,104 @@ using System.Text.RegularExpressions;
 namespace School_Blog_project.Models
 {
 	/// <summary>
-	/// Shared article listing logic for category pages and the news page.
+	/// Provides factory methods for creating view models representing paginated article listings, such as category and news
+	/// pages.
 	/// </summary>
+	/// <remarks>This static class centralizes logic for constructing article listing pages, including support for
+	/// filtering by category or year, pagination, and placeholder content for incomplete pages. Use these methods to
+	/// generate view models suitable for display in UI components that present lists of articles.</remarks>
 	public static class ArticleListingFactory
 	{
-		// Default number of articles to show per page. This is used when the caller doesn't specify a page size.
+		/// <summary>
+		/// Default number of articles to display per page if not specified.
+		/// </summary>
 		private const int DefaultPageSize = 6;
-		// Placeholder values for padding article lists when there are not enough articles to fill a page.
+
+		/// <summary>
+		/// Represents the default placeholder text used for article titles.
+		/// </summary>
 		private const string PlaceholderTitle = "Article Title";
-		// A generic placeholder image URL to use when an article doesn't have an associated image.
+
+		/// <summary>
+		/// Represents the URL of the default placeholder image used when no thumbnail image is available.
+		/// </summary>
 		private const string PlaceholderImageUrl = AssetPaths.PlaceholderImage;
 
 		/// <summary>
-		/// Asynchronously creates a view model for a paginated article listing filtered by one or more category aliases.
+		/// Asynchronously creates a view model for an article listing page filtered by one or more category aliases.
 		/// </summary>
+		/// <param name="heading">The heading text to display on the category page.</param>
+		/// <param name="actionName">The name of the action used for generating pagination or navigation links.</param>
+		/// <param name="page">The page number of results to retrieve. Must be greater than or equal to 1.</param>
+		/// <param name="pageSize">The maximum number of articles to include on each page. Must be greater than 0.</param>
+		/// <param name="year">Optional year filter to apply to the listing.</param>
+		/// <param name="categoryAliases">An array of category aliases used to filter the articles displayed on the page.</param>
 		public static Task<ArticleListingPageViewModel> CreateCategoryPageAsync(
 			ApplicationDbContext context,
 			string heading,
 			string actionName,
 			int page = 1,
 			int pageSize = DefaultPageSize,
+			int? year = null,
 			params string[] categoryAliases)
 		{
-			return CreatePageAsync(context, heading, actionName, page, pageSize, categoryAliases);
+			string displayHeading = BuildHeading(heading, year);
+			return CreatePageAsync(context, displayHeading, actionName, page, pageSize, year, categoryAliases);
 		}
 
 		/// <summary>
-		/// Creates an asynchronous view model for a paginated list of news articles.
+		/// Asynchronously creates a view model for a paginated news article listing, optionally filtered by year.
 		/// </summary>
 		public static Task<ArticleListingPageViewModel> CreateNewsPageAsync(
 			ApplicationDbContext context,
 			int page = 1,
-			int pageSize = DefaultPageSize)
+			int pageSize = DefaultPageSize,
+			int? year = null)
 		{
-			return CreatePageAsync(context, "News", "News", page, pageSize);
+			string heading = BuildHeading("News", year);
+			return CreatePageAsync(context, heading, "News", page, pageSize, year);
 		}
 
 		/// <summary>
-		/// Creates an article listing page view model for the specified page, page size, and optional category filters.
+		/// Builds the visible heading for a listing page, appending the year when a filter is active.
 		/// </summary>
-		/// <remarks>If no articles match the specified categories, the returned view model will contain placeholders
-		/// to fill the requested page size. The method performs all database operations asynchronously.</remarks>
+		private static string BuildHeading(string heading, int? year)
+		{
+			return year.HasValue ? $"{heading} - {year.Value}" : heading;
+		}
+
+		/// <summary>
+		/// Asynchronously creates an article listing page view model with articles filtered and paginated according to the
+		/// specified criteria.
+		/// </summary>
+		/// <remarks>If no articles match the specified categories, the result will contain an empty article list. The
+		/// method ensures the returned page size is at least 1 and fills the article list with placeholders if there are
+		/// fewer articles than the requested page size.</remarks>
 		private static async Task<ArticleListingPageViewModel> CreatePageAsync(
 			ApplicationDbContext context,
 			string heading,
 			string actionName,
 			int page,
 			int pageSize,
+			int? year,
 			params string[] categoryAliases)
 		{
-			// Ensure page and pageSize are within reasonable bounds to prevent invalid queries.
 			pageSize = Math.Max(1, pageSize);
 
-			// Start with a base query for articles, using AsNoTracking for read-only performance.
 			IQueryable<Article> query = context.Articles.AsNoTracking();
 
-			// Filter by category only when aliases were supplied.
+			// If a year filter is specified, calculate the start and end dates for that year and filter articles accordingly.
+			if (year.HasValue)
+			{
+				DateTime startOfYear = new(year.Value, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+				DateTime startOfNextYear = startOfYear.AddYears(1);
+
+				query = query.Where(article =>
+					article.DatePublished >= startOfYear &&
+					article.DatePublished < startOfNextYear);
+			}
+
+			// If category aliases are provided, look up the corresponding category IDs and filter articles to those categories.
 			if (categoryAliases.Length > 0)
 			{
 				List<int> categoryIds = await context.Categories
@@ -92,25 +134,23 @@ namespace School_Blog_project.Models
 			int totalPages = Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
 			int currentPage = Math.Clamp(page, 1, totalPages);
 
-			// Retrieve only the articles for the current page using Skip and Take for pagination.
 			List<Article> pageArticles = await query
 				.Skip((currentPage - 1) * pageSize)
 				.Take(pageSize)
 				.ToListAsync();
 
-			// Convert the retrieved articles to summaries for the view model.
-			List<ArticleSummary> articles = pageArticles
-				.Select(ToSummary)
-				.ToList();
+			// Convert the retrieved articles to their summary representations for display in the listing.
+			List<ArticleSummary> articles = pageArticles.Select(ToSummary).ToList();
 
-			// If there are not enough articles to fill the page, add placeholders until we reach the
-			// desired page size.
+			// If there are fewer articles than the requested page size, fill the remaining slots with placeholder summaries.
 			while (articles.Count < pageSize)
 			{
 				articles.Add(CreatePlaceholder());
 			}
 
-			// Construct and return the view model with the retrieved articles and pagination info.
+			// Retrieve the list of available news archive years and the currently selected year for display in the sidebar or navigation.
+			NewsArchivesViewModel archives = await NewsArchivesFactory.CreateAsync(context, year);
+
 			return new ArticleListingPageViewModel
 			{
 				Heading = heading,
@@ -118,7 +158,11 @@ namespace School_Blog_project.Models
 				Articles = articles,
 				CurrentPage = currentPage,
 				TotalPages = totalPages,
-				PageSize = pageSize
+				PageSize = pageSize,
+				RouteValues = year.HasValue
+					? new Dictionary<string, string> { ["year"] = year.Value.ToString() }
+					: new Dictionary<string, string>(),
+				NewsArchives = archives
 			};
 		}
 

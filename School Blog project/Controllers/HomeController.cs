@@ -20,9 +20,9 @@ namespace School_Blog_project.Controllers
 		}
 
 		/// <summary>
-		/// Returns the home page view with featured stories and paginated news articles. It retrieves the most recent 
-		/// featured article to display as the main story and up to three additional featured articles for secondary display. 
-		/// The news section is paginated, showing a fixed number of articles per page, and calculates the total number of 
+		/// Returns the home page view with featured stories and paginated news articles. It retrieves the most recent
+		/// featured article to display as the main story and up to three additional featured articles for secondary display.
+		/// The news section is paginated, showing a fixed number of articles per page, and calculates the total number of
 		/// pages based on the total count of news articles in the database.
 		/// </summary>
 		public async Task<IActionResult> Index(int newsPage = 1)
@@ -77,6 +77,7 @@ namespace School_Blog_project.Controllers
 				CurrentNewsPage = currentNewsPage,
 				TotalNewsPages = totalNewsPages
 			};
+
 			// Return the home page view, passing the populated view model to be rendered.
 			return View(viewModel);
 		}
@@ -124,7 +125,7 @@ namespace School_Blog_project.Controllers
 		/// <summary>
 		/// Returns the students information page view with paginated articles categorized under "Student Stories" or "Students".
 		/// </summary>
-		public async Task<IActionResult> Students(int page = 1)
+		public async Task<IActionResult> Students(int page = 1, int? year = null)
 		{
 			return View(await ArticleListingFactory.CreateCategoryPageAsync(
 				_context,
@@ -132,13 +133,14 @@ namespace School_Blog_project.Controllers
 				actionName: nameof(Students),
 				page: page,
 				pageSize: 6,
+				year: year,
 				categoryAliases: ["Student Stories", "Students"]));
 		}
 
 		/// <summary>
 		/// Returns the graduates information page view with paginated articles categorized under "Graduate Stories" or "Graduates".
 		/// </summary>
-		public async Task<IActionResult> Graduates(int page = 1)
+		public async Task<IActionResult> Graduates(int page = 1, int? year = null)
 		{
 			return View(await ArticleListingFactory.CreateCategoryPageAsync(
 				_context,
@@ -146,13 +148,14 @@ namespace School_Blog_project.Controllers
 				actionName: nameof(Graduates),
 				page: page,
 				pageSize: 6,
+				year: year,
 				categoryAliases: ["Graduate Stories", "Graduates"]));
 		}
 
 		/// <summary>
 		/// Returns the faculty information page view with paginated articles categorized under "Faculty & Staff Stories", "Faculty & Staff", or "Faculty".
 		/// </summary>
-		public async Task<IActionResult> Faculty(int page = 1)
+		public async Task<IActionResult> Faculty(int page = 1, int? year = null)
 		{
 			return View(await ArticleListingFactory.CreateCategoryPageAsync(
 				_context,
@@ -160,18 +163,20 @@ namespace School_Blog_project.Controllers
 				actionName: nameof(Faculty),
 				page: page,
 				pageSize: 6,
+				year: year,
 				categoryAliases: ["Faculty & Staff Stories", "Faculty & Staff", "Faculty"]));
 		}
 
 		/// <summary>
 		/// Returns the news listing view with paginated articles categorized under "News".
 		/// </summary>
-		public async Task<IActionResult> News(int page = 1)
+		public async Task<IActionResult> News(int page = 1, int? year = null)
 		{
 			return View(await ArticleListingFactory.CreateNewsPageAsync(
 				_context,
 				page: page,
-				pageSize: 6));
+				pageSize: 6,
+				year: year));
 		}
 
 		/// <summary>

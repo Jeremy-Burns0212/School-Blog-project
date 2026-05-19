@@ -83,14 +83,11 @@ namespace School_Blog_project.Controllers
 		}
 
 		/// <summary>
-		/// Handles HTTP GET requests for the Articles page, displaying a specific article by its title slug or the most
-		/// recent article if no slug is provided.
+		/// Handles HTTP GET requests for the article detail page. The page can be reached from the dashed-title route
+		/// (for example: /articles/my-story-title).
 		/// </summary>
-		/// <remarks>If the specified article does not exist, the method returns a 404 Not Found response. The title
-		/// slug is matched using a slugified version of the article title.</remarks>
-		/// <param name="titleSlug">An optional URL-friendly string representing the article title. If null or empty, the most recently published
-		/// article is displayed.</param>
-		[HttpGet("Home/Articles/{titleSlug?}")]
+		/// <param name="titleSlug">Optional URL-friendly title slug.</param>
+		[HttpGet("Articles/{titleSlug?}")]
 		public async Task<IActionResult> Articles(string? titleSlug = null)
 		{
 			// Retrieve all articles from the database without tracking to improve performance, as we only need to read the data.
@@ -104,13 +101,13 @@ namespace School_Blog_project.Controllers
 				? articles.OrderByDescending(a => a.DatePublished).FirstOrDefault()
 				: articles.FirstOrDefault(a => Slugify(a.Title) == titleSlug);
 
-			// If no matching article is found, return a 404 Not Found response.
+			// If no matching article is found, return a 404 Not Found response and display the NotFound view.
 			if (article is null)
 			{
-				return NotFound();
+				Response.StatusCode = 404;
+				return View("ArticleNotFound");
 			}
 
-			// Convert the found article to its corresponding view model and return the Articles view to display it.
 			return View(ToViewModel(article));
 		}
 

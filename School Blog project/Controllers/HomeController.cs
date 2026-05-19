@@ -84,11 +84,10 @@ namespace School_Blog_project.Controllers
 
 		/// <summary>
 		/// Handles HTTP GET requests for the article detail page. The page can be reached from the dashed-title route
-		/// (for example: /my-story-title) and also from the legacy /Home/Articles route.
+		/// (for example: /articles/my-story-title).
 		/// </summary>
 		/// <param name="titleSlug">Optional URL-friendly title slug.</param>
-		[HttpGet("/{titleSlug}")]
-		[HttpGet("Home/Articles/{titleSlug?}")]
+		[HttpGet("Articles/{titleSlug?}")]
 		public async Task<IActionResult> Articles(string? titleSlug = null)
 		{
 			// Retrieve all articles from the database without tracking to improve performance, as we only need to read the data.

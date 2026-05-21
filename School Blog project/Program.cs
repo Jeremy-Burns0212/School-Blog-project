@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using School_Blog_project.Data;
+using School_Blog_project.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
 	.AddRoles<IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddScoped<RoleSeeder>();
+builder.Services.AddScoped<ISiteSettingsService, SiteSettingsService>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 

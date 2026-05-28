@@ -268,6 +268,48 @@
 })();
 </script>
 <script>
+// When the settings form is submitted, immediately apply the chosen colors
+(function () {
+  function normalizeHex(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) return '';
+    return trimmed.startsWith('#') ? trimmed.toUpperCase() : ('#' + trimmed.toUpperCase());
+  }
+
+  const primaryPicker = document.getElementById('SettingsForm_PrimaryColorPicker');
+  const primaryText = document.getElementById('SettingsForm_PrimaryColor');
+  const secondaryPicker = document.getElementById('SettingsForm_SecondaryColorPicker');
+  const secondaryText = document.getElementById('SettingsForm_SecondaryColor');
+
+  function readPrimary() {
+    return normalizeHex((primaryText && primaryText.value) || (primaryPicker && primaryPicker.value) || '');
+  }
+
+  function readSecondary() {
+    return normalizeHex((secondaryText && secondaryText.value) || (secondaryPicker && secondaryPicker.value) || '');
+  }
+
+  function applyColors() {
+    const p = readPrimary();
+    const s = readSecondary();
+    if (p) document.documentElement.style.setProperty('--site-primary', p);
+    if (s) document.documentElement.style.setProperty('--site-secondary', s);
+  }
+
+  // Find the containing form for the primary picker
+  const settingsForm = primaryPicker ? primaryPicker.closest('form') : null;
+  if (settingsForm) {
+    settingsForm.addEventListener('submit', function () {
+      applyColors();
+      // let the form submit continue to the server
+    });
+  }
+
+  // Also expose a small helper for manual testing
+  window.__applySiteColorsFromPickers = applyColors;
+})();
+</script>
+<script>
 // Submit role-change forms via fetch to avoid full-page reload and preserve scroll
 (function () {
   async function submitRoleForm(form) {

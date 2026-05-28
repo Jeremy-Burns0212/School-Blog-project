@@ -1,19 +1,43 @@
-﻿@* Card displaying basic media contact information used in sidebars. 
-   Replace static values with real data or a view model when available. *@
-<div class="card">
-    <div class="card-header">Media Contact</div>
+﻿@using Microsoft.EntityFrameworkCore
+@inject School_Blog_project.Data.ApplicationDbContext DbContext
+@{
+    SiteSettings? siteSettings = await DbContext.SiteSettings
+        .AsNoTracking()
+        .OrderBy(settings => settings.SiteSettingsId)
+        .Include(settings => settings.MediaContact)
+        .FirstOrDefaultAsync();
+
+    MediaContact? mediaContact = siteSettings?.MediaContact;
+}
+
+<div class="card site-footer-card">
+    <div class="card-header bg-transparent fw-semibold">Media Contact</div>
     <div class="card-body">
+        @if (mediaContact is null || (string.IsNullOrWhiteSpace(mediaContact.JobPosition)
+            && string.IsNullOrWhiteSpace(mediaContact.FullName)
+            && string.IsNullOrWhiteSpace(mediaContact.Phone)
+            && string.IsNullOrWhiteSpace(mediaContact.Email)))
+        {
+            <p class="small text-muted mb-0">No media contact has been configured yet.</p>
+        }
+        else
+        {
+            <h6 class="card-title mb-1">@(string.IsNullOrWhiteSpace(mediaContact?.JobPosition) ? "Media Relations" : mediaContact.JobPosition)</h6>
 
-        @* Organization contact role/title *@
-        <h6 class="card-title mb-1">Media Relations</h6>
+            @if (!string.IsNullOrWhiteSpace(mediaContact?.FullName))
+            {
+                <p class="small text-muted mb-1">@mediaContact.FullName</p>
+            }
 
-        @* Contact name *@
-        <p class="small text-muted mb-1">Jane Doe</p>
+            @if (!string.IsNullOrWhiteSpace(mediaContact?.Phone))
+            {
+                <p class="small text-muted mb-1">Phone: @mediaContact.Phone</p>
+            }
 
-        @* Contact phone number *@
-        <p class="small text-muted mb-1">Phone: (555) 555-5555</p>
-
-        @* Contact email - use a mailto link *@
-        <p class="small text-muted mb-0">Email: <a href="mailto:media@example.edu">media@example.edu</a></p>
+            @if (!string.IsNullOrWhiteSpace(mediaContact?.Email))
+            {
+                <p class="small text-muted mb-0">Email: <a href="mailto:@mediaContact.Email">@mediaContact.Email</a></p>
+            }
+        }
     </div>
 </div>

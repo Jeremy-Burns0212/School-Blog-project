@@ -110,3 +110,97 @@ body {
   flex-wrap: wrap;
   gap: 0.4rem;
 }
+
+.site-navbar {
+  /* Navbar is a solid primary color controlled by the primary picker */
+  background: var(--site-primary, #0d6efd);
+  position: relative;
+  z-index: 1030;
+}
+
+/* Navbar child elements that should use the primary background */
+.site-navbar .navbar-collapse,
+.site-navbar .navbar-toggler,
+.site-navbar .navbar-brand,
+.site-navbar .form-control {
+  background: var(--site-primary, #0d6efd);
+}
+
+/* Keep the search input inside the navbar white for readability */
+.site-navbar form[role="search"] .form-control {
+  background: #ffffff !important;
+  color: inherit !important;
+}
+.site-navbar .navbar-brand,
+.site-navbar .nav-link {
+  color: #fff !important;
+}
+
+.site-navbar .nav-link:hover,
+.site-navbar .nav-link:focus {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.site-logo,
+.site-emblem {
+  object-fit: contain;
+}
+
+.site-logo {
+  width: 40px;
+  height: 40px;
+  padding: 0.25rem;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.site-emblem {
+  width: 88px;
+  height: 88px;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.site-footer-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.site-footer-links a:hover {
+  color: var(--site-primary, #0d6efd) !important;
+}
+
+.site-footer-accent {
+  /* Footer accent and copyright background are controlled by secondary */
+  background: var(--site-secondary, #f5a623);
+}
+
+/* Site and page backgrounds driven by secondary color picker */
+body {
+  background: var(--site-secondary, #f8fafc);
+}
+
+main[role="main"] {
+  background: var(--site-secondary, #ffffff);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 1.25rem;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.05);
+  padding: 1.5rem;
+}
+
+/* Mobile collapsed menu overlay uses primary background and stays on top */
+@media (max-width: 575.98px) {
+  .site-navbar .navbar-collapse.collapse.show {
+    position: fixed !important;
+    top: 56px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 99999 !important;
+    background: var(--site-primary, #0d6efd) !important;
+    padding: 1rem 0.75rem !important;
+    max-height: calc(100vh - 56px) !important;
+    overflow: auto !important;
+  }
+}

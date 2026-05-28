@@ -4,6 +4,8 @@
     // Load the current site-wide settings once for this request.
     SiteSettings siteSettings = await SiteSettingsService.GetCurrentAsync();
 
+    ViewData["SiteSettings"] = siteSettings;
+
     // Resolve the school display name, falling back to a safe default if needed.
     string schoolName = string.IsNullOrWhiteSpace(siteSettings.SchoolName)
         ? "School Blog Project"
@@ -18,16 +20,28 @@
     string schoolBlurb = string.IsNullOrWhiteSpace(siteSettings.SchoolBlurb)
         ? "A school blog for stories, news, and updates."
         : siteSettings.SchoolBlurb;
-
-    // Resolve the logo image path used in the header branding.
+    
+	// Resolve the school logo URL, displaying a placeholder if not set.
     string schoolLogo = string.IsNullOrWhiteSpace(siteSettings.SchoolLogo)
         ? "/images/placeholder-logo.svg"
         : siteSettings.SchoolLogo;
 
-    // Resolve the emblem image path used in the footer branding.
+	// Resolve the school emblem URL, displaying a placeholder if not set.
     string schoolEmblem = string.IsNullOrWhiteSpace(siteSettings.SchoolEmblem)
         ? "/images/placeholder-emblem.svg"
         : siteSettings.SchoolEmblem;
+
+	// Resolve the current color scheme values from the database. 
+    // If not set, the CSS will fall back to default colors.
+    ColorScheme? colorScheme = siteSettings.ColorScheme;
+
+    string? siteColorOne = string.IsNullOrWhiteSpace(colorScheme?.Color1)
+        ? null
+        : $"#{colorScheme.Color1}";
+
+    string? siteColorTwo = string.IsNullOrWhiteSpace(colorScheme?.Color2)
+        ? null
+        : $"#{colorScheme.Color2}";
 
     // Order the off-site links so they render consistently in the footer.
     List<OffSiteLink> offSiteLinks = siteSettings.OffSiteLinks
@@ -54,11 +68,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/School_Blog_project.styles.css" asp-append-version="true" />
+
+    <!--  -->
+    @if (siteColorOne is not null && siteColorTwo is not null)
+    {
+        <style>
+                :root {
+                    --site-color-1: @siteColorOne;
+                    --site-color-2: @siteColorTwo;
+                }
+        </style>
+    }
 </head>
 <body>
     <!-- Site header and primary navigation -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark site-navbar border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <!-- Site branding logo linking to homepage -->
                 <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Home">
@@ -76,16 +101,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Students">Student Stories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Students">Student Stories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Graduates">Graduate Stories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Graduates">Graduate Stories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Faculty">Faculty &amp; Staff Stories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Faculty">Faculty &amp; Staff Stories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="News">News</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="News">News</a>
                         </li>
                     </ul>
 

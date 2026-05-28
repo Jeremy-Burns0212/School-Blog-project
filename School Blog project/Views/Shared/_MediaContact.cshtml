@@ -1,8 +1,7 @@
 ﻿@using School_Blog_project.Models
-@inject School_Blog_project.Services.ISiteSettingsService SiteSettingsService
 @{
-    // Load the current site-wide settings so the media contact card stays database-driven.
-    SiteSettings siteSettings = await SiteSettingsService.GetCurrentAsync();
+    // Reuse the SiteSettings instance already loaded by the layout.
+    SiteSettings siteSettings = ViewData["SiteSettings"] as SiteSettings ?? new SiteSettings();
 
     // Pull the nested MediaContact record from the current site settings.
     MediaContact? mediaContact = siteSettings.MediaContact;

@@ -13,6 +13,9 @@ namespace School_Blog_project.Services
 	{
 		private readonly ApplicationDbContext _context;
 
+		// Cache the current settings task so the database is only queried once per request.
+		private Task<SiteSettings>? _currentSiteSettingsTask;
+
 		/// <summary>
 		/// Initializes a new instance of the SiteSettingsService class using the specified database context.
 		/// </summary>
@@ -26,7 +29,16 @@ namespace School_Blog_project.Services
 		/// </summary>
 		/// <remarks>The returned <see cref="SiteSettings"/> instance includes related entities such as media contact,
 		/// color scheme, and off-site links. The method does not track changes to the retrieved entities.</remarks>
-		public async Task<SiteSettings> GetCurrentAsync()
+		public Task<SiteSettings> GetCurrentAsync()
+		{
+			_currentSiteSettingsTask ??= LoadCurrentAsync();
+			return _currentSiteSettingsTask;
+		}
+
+		/// <summary>
+		/// Loads the current site settings from the database.
+		/// </summary>
+		private async Task<SiteSettings> LoadCurrentAsync()
 		{
 			SiteSettings? siteSettings = await _context.SiteSettings
 				.AsNoTracking()

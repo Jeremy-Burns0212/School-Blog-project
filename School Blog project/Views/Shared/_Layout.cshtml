@@ -1,46 +1,120 @@
-﻿<!DOCTYPE html>
+﻿@using School_Blog_project.Models
+@inject School_Blog_project.Services.ISiteSettingsService SiteSettingsService
+@{
+    // Load the current site-wide settings once for this request.
+    SiteSettings siteSettings = await SiteSettingsService.GetCurrentAsync();
+
+    ViewData["SiteSettings"] = siteSettings;
+
+    // Resolve the school display name, falling back to a safe default if needed.
+    string schoolName = string.IsNullOrWhiteSpace(siteSettings.SchoolName)
+        ? "School Blog Project"
+        : siteSettings.SchoolName;
+
+    // Resolve the school acronym used in the branding area.
+    string schoolAcronym = string.IsNullOrWhiteSpace(siteSettings.SchoolAcronym)
+        ? "SBP"
+        : siteSettings.SchoolAcronym;
+
+    // Resolve the site blurb shown in the footer.
+    string schoolBlurb = string.IsNullOrWhiteSpace(siteSettings.SchoolBlurb)
+        ? "A school blog for stories, news, and updates."
+        : siteSettings.SchoolBlurb;
+    
+	// Resolve the school logo URL, displaying a placeholder if not set.
+    string schoolLogo = string.IsNullOrWhiteSpace(siteSettings.SchoolLogo)
+        ? "/images/placeholder-logo.svg"
+        : siteSettings.SchoolLogo;
+
+	// Resolve the school emblem URL, displaying a placeholder if not set.
+    string schoolEmblem = string.IsNullOrWhiteSpace(siteSettings.SchoolEmblem)
+        ? "/images/placeholder-emblem.svg"
+        : siteSettings.SchoolEmblem;
+
+	// Resolve the current color scheme values from the database. 
+    // If not set, the CSS will fall back to default colors.
+    ColorScheme? colorScheme = siteSettings.ColorScheme;
+
+    string? siteColorOne = string.IsNullOrWhiteSpace(colorScheme?.Color1)
+        ? null
+        : $"#{colorScheme.Color1}";
+
+    string? siteColorTwo = string.IsNullOrWhiteSpace(colorScheme?.Color2)
+        ? null
+        : $"#{colorScheme.Color2}";
+
+    // Order the off-site links so they render consistently in the footer.
+    List<OffSiteLink> offSiteLinks = siteSettings.OffSiteLinks
+        .OrderBy(link => link.Name)
+        .ToList();
+
+    // Build the copyright text using only the current year and school name.
+    int currentYear = DateTime.UtcNow.Year;
+    string copyrightText = $"© {currentYear} - {schoolName}";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic document metadata -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - School_Blog_project</title>
+
+    <!-- Page title uses the current page title plus the configured school name -->
+    <title>@ViewData["Title"] - @schoolName</title>
+
     <script type="importmap"></script>
+
+    <!-- Shared application styles -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/School_Blog_project.styles.css" asp-append-version="true" />
+
+    <!--  -->
+    @if (siteColorOne is not null && siteColorTwo is not null)
+    {
+        <style>
+                :root {
+                    --site-color-1: @siteColorOne;
+                    --site-color-2: @siteColorTwo;
+                }
+        </style>
+    }
 </head>
 <body>
+    <!-- Site header and primary navigation -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark site-navbar border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <!-- Placeholder logo (inline SVG) linking to homepage -->
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Home">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" role="img" class="d-inline-block align-top" focusable="false" aria-hidden="false">
-                        <rect width="100%" height="100%" fill="#6c757d"></rect>
-                        <text x="50%" y="50%" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" font-size="10" dominant-baseline="middle" text-anchor="middle">Logo</text>
-                    </svg>
+                <!-- Site branding logo linking to homepage -->
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Home">
+                    <img src="@schoolLogo" alt="@schoolName logo" width="40" height="40" class="d-inline-block align-top" />
+                    <span class="fw-semibold">@schoolAcronym</span>
                 </a>
 
+                <!-- Mobile navigation toggle -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                <!-- Main navigation links and shared login partial -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Students">Student Stories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Students">Student Stories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Graduates">Graduate Stories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Graduates">Graduate Stories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Faculty">Faculty &amp; Staff Stories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Faculty">Faculty &amp; Staff Stories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="News">News</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="News">News</a>
                         </li>
                     </ul>
+
+                    <!-- Authentication UI shared across the application -->
                     <partial name="_LoginPartial" />
 
                     <!-- Non-functional search input (placeholder only) -->
@@ -51,33 +125,42 @@
             </div>
         </nav>
     </header>
+
+    <!-- Main page content -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Site footer with branding, links, and blurb -->
     <footer class="border-top footer text-muted">
         <div class="container py-4">
             <div class="row align-items-start">
-                <!-- Left: icon -->
+                <!-- Left: site emblem -->
                 <div class="col-12 col-md-2 mb-3 text-center text-md-start">
-                    <div class="avatar rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
-                         style="width:64px;height:64px;font-weight:600; font-size:1.1rem;">
-                        Logo 2
-                    </div>
+                    <img src="@schoolEmblem" alt="@schoolName emblem" width="64" height="64" class="img-fluid" />
                 </div>
 
-                <!-- Middle: About + Categories -->
+                <!-- Middle: off-site links and category links -->
                 <div class="col-12 col-md-7 mb-3">
                     <div class="row">
                         <div class="col-12 col-sm-6 mb-3">
-                            <h5>More About [School Acronym]</h5>
+                            <h5>More About @schoolAcronym</h5>
                             <ul class="list-unstyled">
-                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 1</a></li>
-                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 2</a></li>
-                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 3</a></li>
-                                <li><a class="text-decoration-none text-muted" asp-area="" asp-controller="Home" asp-action="Index">Placeholder Link 4</a></li>
+                                @if (offSiteLinks.Count > 0)
+                                {
+                                    foreach (OffSiteLink link in offSiteLinks)
+                                    {
+                                        <li>
+                                            <a class="text-decoration-none text-muted" href="@link.URL" target="_blank" rel="noopener noreferrer">@link.Name</a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="text-muted">No additional links available.</li>
+                                }
                             </ul>
                         </div>
 
@@ -93,20 +176,22 @@
                     </div>
                 </div>
 
-                <!-- Right: blurb -->
+                <!-- Right: school blurb -->
                 <div class="col-12 col-md-3 mb-3">
-                    <p class="text-muted small">Placeholder blurb about the school and the blog.</p>
+                    <p class="text-muted small">@schoolBlurb</p>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom full-width copyright -->
+        <!-- Copyright bar -->
         <div class="w-100 bg-dark text-white">
             <div class="w-100 bg-dark text-white text-center py-2 small">
-                &copy; 2026 - School Blog Project
+                @copyrightText
             </div>
         </div>
     </footer>
+
+    <!-- Shared client-side scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

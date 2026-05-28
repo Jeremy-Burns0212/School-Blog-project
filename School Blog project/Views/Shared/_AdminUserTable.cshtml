@@ -1,0 +1,125 @@
+@model IReadOnlyList<School_Blog_project.Pages.AdminOnly.IndexModel.UserRowViewModel>
+
+@{
+    var isSuper = ViewData["IsCurrentUserSuperAdmin"] is bool b && b;
+    var primaryAdminUserId = ViewData["PrimaryAdminUserId"] as string;
+}
+
+@if (Model is null || Model.Count == 0)
+{
+    <div class="text-muted small">No users in this group.</div>
+}
+else
+{
+    <div class="table-responsive admin-user-table">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Current roles</th>
+                    <th>Actions</th>
+                    <th class="text-start">Permission change</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    var collapseId = $"user-details-{user.UserId}";
+                    var selectedRole = user.Roles.Contains("Admin") ? "Admin" : user.PrimaryRole;
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@user.UserName</div>
+                            <div class="text-muted small">@user.Email</div>
+                        </td>
+                        <td>
+                            <div class="admin-user-badges">
+                                @if (user.Roles.Count > 0)
+                                {
+                                    foreach (var role in user.Roles)
+                                    {
+                                        <span class="badge text-bg-secondary">@role</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-light text-dark">No special role</span>
+                                }
+                            </div>
+                        </td>
+                        @if (user.Roles.Contains("Admin") && !isSuper && string.Equals(user.UserId, primaryAdminUserId, StringComparison.Ordinal))
+                        {
+                            <td>
+                                <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">Details</button>
+                            </td>
+                            <td class="text-start">
+                                <span class="text-muted small">Primary admin (super-admin only)</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">Details</button>
+                                <button class="btn btn-danger btn-sm ms-1" type="submit" form="delete-@user.UserId">Delete</button>
+                            </td>
+                            <td class="text-start">
+                                <form method="post" asp-page-handler="UpdateUserRole" class="d-inline-flex flex-wrap gap-2 justify-content-start align-items-center">
+                                    <input type="hidden" name="RoleForm.UserId" value="@user.UserId" />
+                                    <select name="RoleForm.TargetRole" class="form-select form-select-sm w-auto">
+                                        @if (selectedRole == "User")
+                                        {
+                                            <option value="User" selected="selected">General</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="User">General</option>
+                                        }
+
+                                        @if (selectedRole == "Writer")
+                                        {
+                                            <option value="Writer" selected="selected">Writer</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Writer">Writer</option>
+                                        }
+
+                                        @if (selectedRole == "Editor")
+                                        {
+                                            <option value="Editor" selected="selected">Editor</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Editor">Editor</option>
+                                        }
+
+                                        @if (selectedRole == "Admin")
+                                        {
+                                            <option value="Admin" selected="selected">Admin</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Admin">Admin</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                </form>
+                                <form method="post" asp-page-handler="UpdateUserRole" id="delete-@user.UserId" class="d-none">
+                                    <input type="hidden" name="RoleForm.UserId" value="@user.UserId" />
+                                    <input type="hidden" name="RoleForm.TargetRole" value="User" />
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                    <tr class="collapse bg-light" id="@collapseId">
+                        <td colspan="4">
+                            <div class="small text-muted mb-1">Account details</div>
+                            <div>Primary role: @user.PrimaryRole</div>
+                            <div>User ID: @user.UserId</div>
+                            <div>All roles: @(user.Roles.Count > 0 ? string.Join(", ", user.Roles) : "None")</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

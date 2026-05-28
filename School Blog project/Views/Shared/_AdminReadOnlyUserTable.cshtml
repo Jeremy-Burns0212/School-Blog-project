@@ -1,0 +1,57 @@
+@model IReadOnlyList<School_Blog_project.Pages.AdminOnly.IndexModel.UserRowViewModel>
+
+@if (Model is null || Model.Count == 0)
+{
+    <div class="text-muted small">No admin accounts found.</div>
+}
+else
+{
+    <div class="table-responsive admin-user-table">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Roles</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    var collapseId = $"admin-details-{user.UserId}";
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@user.UserName</div>
+                            <div class="text-muted small">@user.Email</div>
+                        </td>
+                        <td>
+                            <div class="admin-user-badges">
+                                @if (user.Roles.Count > 0)
+                                {
+                                    foreach (var role in user.Roles)
+                                    {
+                                        <span class="badge text-bg-secondary">@role</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-light text-dark">Admin</span>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">Details</button>
+                        </td>
+                    </tr>
+                    <tr class="collapse bg-light" id="@collapseId">
+                        <td colspan="3">
+                            <div class="small text-muted mb-1">Admin accounts are read-only from this page.</div>
+                            <div>User ID: @user.UserId</div>
+                            <div>All roles: @(user.Roles.Count > 0 ? string.Join(", ", user.Roles) : "Admin")</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

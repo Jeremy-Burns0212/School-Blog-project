@@ -1,0 +1,304 @@
+@page
+@model School_Blog_project.Pages.AdminOnly.IndexModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@{
+  Layout = "~/Views/Shared/_Layout.cshtml";
+  ViewData["Title"] = "Admin Panel";
+}
+
+<div class="admin-shell">
+  <div class="admin-hero mb-4">
+    <div>
+      <p class="admin-kicker mb-2">Admin Panel</p>
+      <h1 class="display-6 mb-2">Site controls and user permissions</h1>
+      <p class="mb-0">Manage the school branding, contact settings, links, and writer/editor access from one place.</p>
+    </div>
+    <div class="admin-hero-meta">
+      <span class="badge text-bg-light">Admin only</span>
+      <span class="badge text-bg-light">Layout shared with the rest of the site</span>
+    </div>
+  </div>
+
+  @if (TempData["StatusMessage"] is string statusMessage && !string.IsNullOrWhiteSpace(statusMessage))
+  {
+    <div class="alert alert-success">@statusMessage</div>
+  }
+
+  <div class="row g-4">
+    <div class="col-12 col-xl-7">
+      <div class="card admin-card h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+            <div>
+              <h2 class="h4 mb-1">Site Settings</h2>
+              <p class="text-muted mb-0">Edit the school profile, logo paths, and contact details used around the site.</p>
+            </div>
+          </div>
+
+          <form method="post" asp-page-handler="SaveSettings" class="row g-3">
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.SchoolName" class="form-label">School name (full)</label>
+              <input asp-for="SettingsForm.SchoolName" class="form-control" />
+              <span asp-validation-for="SettingsForm.SchoolName" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.SchoolAcronym" class="form-label">School acronym (short name)</label>
+              <input asp-for="SettingsForm.SchoolAcronym" class="form-control" />
+              <span asp-validation-for="SettingsForm.SchoolAcronym" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+              <label asp-for="SettingsForm.StartYear" class="form-label">Established year</label>
+              <input asp-for="SettingsForm.StartYear" class="form-control" />
+              <span asp-validation-for="SettingsForm.StartYear" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+              <label asp-for="SettingsForm.SchoolBlurb" class="form-label">Short blurb about the school (used in footers and listings)</label>
+              <textarea asp-for="SettingsForm.SchoolBlurb" class="form-control" rows="4"></textarea>
+              <span asp-validation-for="SettingsForm.SchoolBlurb" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.SchoolLogo" class="form-label">Logo image path or URL</label>
+              <input asp-for="SettingsForm.SchoolLogo" class="form-control" />
+              <span asp-validation-for="SettingsForm.SchoolLogo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.SchoolEmblem" class="form-label">Emblem image path or URL</label>
+              <input asp-for="SettingsForm.SchoolEmblem" class="form-control" />
+              <span asp-validation-for="SettingsForm.SchoolEmblem" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+              <div class="admin-section-title">Color Scheme</div>
+            </div>
+            <div class="col-md-6">
+              <div class="color-preview-card">
+                <div class="color-preview" id="primaryColorPreview"></div>
+                <label asp-for="SettingsForm.PrimaryColor" class="form-label mt-3">Primary color (hex)</label>
+                <div class="d-flex flex-column gap-2">
+                  <input type="color" id="SettingsForm_PrimaryColorPicker" class="form-control form-control-color admin-color-control" />
+                  <input asp-for="SettingsForm.PrimaryColor" type="text" class="form-control admin-hex-input" />
+                </div>
+                <span asp-validation-for="SettingsForm.PrimaryColor" class="text-danger small"></span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="color-preview-card">
+                <div class="color-preview" id="secondaryColorPreview"></div>
+                <label asp-for="SettingsForm.SecondaryColor" class="form-label mt-3">Secondary color (hex)</label>
+                <div class="d-flex flex-column gap-2">
+                  <input type="color" id="SettingsForm_SecondaryColorPicker" class="form-control form-control-color admin-color-control" />
+                  <input asp-for="SettingsForm.SecondaryColor" type="text" class="form-control admin-hex-input" />
+                </div>
+                <span asp-validation-for="SettingsForm.SecondaryColor" class="text-danger small"></span>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="admin-section-title">Media Contact</div>
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.JobPosition" class="form-label">Media contact job title</label>
+              <input asp-for="SettingsForm.JobPosition" class="form-control" />
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.FullName" class="form-label">Media contact full name</label>
+              <input asp-for="SettingsForm.FullName" class="form-control" />
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.Phone" class="form-label">Media contact phone</label>
+              <input asp-for="SettingsForm.Phone" class="form-control" />
+            </div>
+            <div class="col-md-6">
+              <label asp-for="SettingsForm.Email" class="form-label">Media contact email</label>
+              <input asp-for="SettingsForm.Email" class="form-control" />
+            </div>
+
+            <div class="col-12 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">Save settings</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-5">
+      <div class="card admin-card mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-1">Off-site Links</h2>
+          <p class="text-muted">Add or remove the links that appear in the footer.</p>
+
+          <form method="post" asp-page-handler="AddLink" class="row g-3 mb-4">
+            <div class="col-12">
+              <label asp-for="NewLink.Name" class="form-label">Link label (e.g., Admissions)</label>
+              <input asp-for="NewLink.Name" class="form-control" />
+              <span asp-validation-for="NewLink.Name" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+              <label asp-for="NewLink.Url" class="form-label">Link URL (include https://)</label>
+              <input asp-for="NewLink.Url" class="form-control" />
+              <span asp-validation-for="NewLink.Url" class="text-danger small"></span>
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">Add link</button>
+            </div>
+          </form>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>URL</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var link in Model.OffSiteLinks)
+                {
+                  <tr>
+                    <td>@link.Name</td>
+                    <td class="text-break">@link.Url</td>
+                    <td class="text-end">
+                      <form method="post" asp-page-handler="DeleteLink" class="d-inline">
+                        <input type="hidden" name="offSiteLinkId" value="@link.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                }
+                @if (!Model.OffSiteLinks.Any())
+                {
+                  <tr>
+                    <td colspan="3" class="text-muted">No off-site links have been added yet.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card admin-card mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-1">User Permissions</h2>
+          <p class="text-muted">Move users between general, writer, and editor access. Admin accounts are shown separately.</p>
+
+          <div id="admin-user-permissions" class="row g-3">
+            @{
+              ViewData["IsCurrentUserSuperAdmin"] = Model.IsCurrentUserSuperAdmin;
+            }
+            <div class="col-12">
+              <div class="admin-section-title">Writer permissions</div>
+              @await Html.PartialAsync("_AdminUserTable", Model.WriterUsers)
+            </div>
+            <div class="col-12">
+              <div class="admin-section-title">Editor permissions</div>
+              @await Html.PartialAsync("_AdminUserTable", Model.EditorUsers)
+            </div>
+            <div class="col-12">
+              <div class="admin-section-title">General users</div>
+              @await Html.PartialAsync("_AdminUserTable", Model.GeneralUsers)
+            </div>
+            <div class="col-12">
+              <div class="admin-section-title">Admin accounts</div>
+              <p class="text-muted small mb-2">Normal admins can manage other admins, but the primary admin row stays protected unless you are the primary admin.</p>
+              @{ 
+                ViewData["PrimaryAdminUserId"] = Model.PrimaryAdminUserId;
+              }
+              @await Html.PartialAsync("_AdminUserTable", Model.AdminUsers)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+<script>
+(function () {
+  const colorPairs = [
+    { previewId: 'primaryColorPreview', colorId: 'SettingsForm_PrimaryColorPicker', textId: 'SettingsForm_PrimaryColor' },
+    { previewId: 'secondaryColorPreview', colorId: 'SettingsForm_SecondaryColorPicker', textId: 'SettingsForm_SecondaryColor' }
+  ];
+
+  function normalizeHex(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) {
+      return '';
+    }
+
+    const withHash = trimmed.startsWith('#') ? trimmed : `#${trimmed}`;
+    return withHash.toUpperCase();
+  }
+
+  function updatePreview(preview, value) {
+    const normalized = normalizeHex(value);
+    if (/^#[0-9A-F]{6}$/.test(normalized)) {
+      preview.style.background = normalized;
+      preview.dataset.value = normalized;
+    }
+  }
+
+  for (const pair of colorPairs) {
+    const preview = document.getElementById(pair.previewId);
+    const colorInput = document.getElementById(pair.colorId);
+    const textInput = document.getElementById(pair.textId);
+
+    if (!preview || !colorInput || !textInput) {
+      continue;
+    }
+
+    const sync = (value) => {
+      const normalized = normalizeHex(value);
+      if (/^#[0-9A-F]{6}$/.test(normalized)) {
+        colorInput.value = normalized;
+        textInput.value = normalized;
+        preview.style.background = normalized;
+        preview.dataset.value = normalized;
+      }
+    };
+
+    colorInput.addEventListener('input', (event) => sync(event.target.value));
+    textInput.addEventListener('input', (event) => sync(event.target.value));
+    sync(textInput.value || colorInput.value);
+  }
+})();
+</script>
+<script>
+// Submit role-change forms via fetch to avoid full-page reload and preserve scroll
+(function () {
+  async function submitRoleForm(form) {
+    try {
+      const url = form.action;
+      const fd = new FormData(form);
+      const res = await fetch(url, { method: 'POST', body: fd, credentials: 'same-origin' });
+      const text = await res.text();
+      // Parse response and replace user tables
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const newPermissions = doc.querySelector('#admin-user-permissions');
+      const oldPermissions = document.querySelector('#admin-user-permissions');
+      if (newPermissions && oldPermissions) {
+        oldPermissions.replaceWith(newPermissions.cloneNode(true));
+      } else {
+        // fallback: reload if parsing failed
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error('Role update failed', err);
+      window.location.reload();
+    }
+  }
+
+  document.addEventListener('submit', (e) => {
+    const form = e.target;
+    if (!form || !form.action || form.action.indexOf('UpdateUserRole') === -1) return;
+    e.preventDefault();
+    submitRoleForm(form);
+  }, true);
+})();
+</script>
+}

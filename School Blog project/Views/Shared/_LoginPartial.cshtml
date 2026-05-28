@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using School_Blog_project.Data
 @inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav align-items-sm-center">
     @* Signed-in user menu *@
@@ -23,6 +22,15 @@
 
             @* Dropdown options *@
             <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2" aria-labelledby="accountDropdown">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="dropdown-item" asp-page="/AdminOnly/Index">
+                            Admin Panel
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider" /></li>
+                }
                 <li>
                     <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
                         Account Settings
@@ -37,8 +45,7 @@
             </ul>
         </li>
 
-        @* Extra menu item for Writer role *@
-        @if ((await UserManager.GetUserAsync(User)) is var appUser && appUser != null && await UserManager.IsInRoleAsync(appUser, "Writer"))
+        @if (User.IsInRole("Writer"))
         {
             <li class="nav-item ms-sm-2">
                 <a class="nav-link text-dark" asp-page="/WriterOnly/Index">Writer Area</a>

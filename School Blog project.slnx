@@ -2,5 +2,9 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="Tools/GrantAdmin/GrantAdmin.csproj" />
+    <Project Path="Tools/RevokeAdmin/RevokeAdmin.csproj" />
+  </Folder>
   <Project Path="School Blog project/School Blog project.csproj" />
 </Solution>

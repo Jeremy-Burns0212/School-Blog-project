@@ -14,7 +14,7 @@ namespace School_Blog_project.Data
 	{
 		/// <summary>
 		/// Seed roles and users. The implementation below is an example: it creates
-		/// the roles Reader, Writer and Editor and ensures a sample guest account exists.
+		/// the roles Admin, Writer, Editor and User and ensures a sample guest account exists.
 		/// Edit the <see cref="initialAccounts"/> array to declare the accounts you want
 		/// provisioned for a given deployment.
 		/// </summary>
@@ -24,8 +24,8 @@ namespace School_Blog_project.Data
 			RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 			UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-			// Roles to ensure exist (remove 'Reader' if not used)
-			string[] roles = ["Writer", "Editor", "User"];
+			// Roles to ensure exist.
+			string[] roles = ["Admin", "Writer", "Editor", "User"];
 			foreach (string? role in roles)
 			{
 				if (!await roleManager.RoleExistsAsync(role))

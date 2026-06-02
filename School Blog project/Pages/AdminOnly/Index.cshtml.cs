@@ -5,28 +5,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using School_Blog_project.Data;
 using School_Blog_project.Models;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace School_Blog_project.Pages.AdminOnly
 {
 	[Authorize(Roles = "Admin")]
-	public class IndexModel : PageModel
+	public class IndexModel(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager) : PageModel
 	{
 		private const string AdminRole = "Admin";
 		private const string WriterRole = "Writer";
 		private const string EditorRole = "Editor";
 		private const string GeneralRole = "User";
 
-		private readonly ApplicationDbContext _context;
-		private readonly RoleManager<IdentityRole> _roleManager;
-		private readonly UserManager<ApplicationUser> _userManager;
-		public IndexModel(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
-		{
-			_context = context;
-			_roleManager = roleManager;
-			_userManager = userManager;
-		}
+		private readonly ApplicationDbContext _context = context;
+		private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+		private readonly UserManager<ApplicationUser> _userManager = userManager;
 
 		[BindProperty]
 		public AdminSettingsInputModel SettingsForm { get; set; } = new();
@@ -72,20 +65,14 @@ namespace School_Blog_project.Pages.AdminOnly
 			settings.SchoolLogo = SettingsForm.SchoolLogo.Trim();
 			settings.SchoolEmblem = SettingsForm.SchoolEmblem.Trim();
 
-			if (settings.MediaContact is null)
-			{
-				settings.MediaContact = new MediaContact();
-			}
+			settings.MediaContact ??= new MediaContact();
 
 			settings.MediaContact.JobPosition = SettingsForm.JobPosition?.Trim();
 			settings.MediaContact.FullName = SettingsForm.FullName?.Trim();
 			settings.MediaContact.Phone = SettingsForm.Phone?.Trim();
 			settings.MediaContact.Email = SettingsForm.Email?.Trim();
 
-			if (settings.ColorScheme is null)
-			{
-				settings.ColorScheme = new ColorScheme();
-			}
+			settings.ColorScheme ??= new ColorScheme();
 
 			settings.ColorScheme.Color1 = NormalizeHex(SettingsForm.PrimaryColor);
 			settings.ColorScheme.Color2 = NormalizeHex(SettingsForm.SecondaryColor);
@@ -134,9 +121,13 @@ namespace School_Blog_project.Pages.AdminOnly
 		{
 			// Begin role update handler - only validate RoleForm fields here
 			// Remove validation entries for all other fields so only RoleForm is validated
-			var keysToKeepPrefix = "RoleForm.";
-			var keysToRemove = ModelState.Keys.Where(k => !k.StartsWith(keysToKeepPrefix)).ToList();
-			foreach (var k in keysToRemove) ModelState.Remove(k);
+			string keysToKeepPrefix = "RoleForm.";
+			List<string> keysToRemove = [.. ModelState.Keys.Where(k => !k.StartsWith(keysToKeepPrefix, StringComparison.Ordinal))];
+			foreach (string? k in keysToRemove)
+			{
+				_ = ModelState.Remove(k);
+			}
+
 			if (!ModelState.IsValid)
 			{
 				await LoadPageAsync();
@@ -149,8 +140,8 @@ namespace School_Blog_project.Pages.AdminOnly
 			{
 				if (Request?.Form != null)
 				{
-					var uid = Request.Form["RoleForm.UserId"].FirstOrDefault();
-					var tr = Request.Form["RoleForm.TargetRole"].FirstOrDefault();
+					string? uid = Request.Form["RoleForm.UserId"].FirstOrDefault();
+					string? tr = Request.Form["RoleForm.TargetRole"].FirstOrDefault();
 					if (!string.IsNullOrWhiteSpace(uid) || !string.IsNullOrWhiteSpace(tr))
 					{
 						RoleForm = new UserRoleInputModel
@@ -184,7 +175,7 @@ namespace School_Blog_project.Pages.AdminOnly
 				return Page();
 			}
 
-			var currentUserId = _userManager.GetUserId(User);
+			string? currentUserId = _userManager.GetUserId(User);
 			string? superAdminId = await GetPrimaryAdminUserIdAsync();
 			bool isTargetAdmin = await _userManager.IsInRoleAsync(user, AdminRole);
 			bool isTargetPrimaryAdmin = string.Equals(user.Id, superAdminId, StringComparison.Ordinal);
@@ -201,7 +192,7 @@ namespace School_Blog_project.Pages.AdminOnly
 			await EnsureRoleAsync(GeneralRole);
 
 			IEnumerable<string> currentRoles = await _userManager.GetRolesAsync(user);
-			List<string> removableRoles = currentRoles.Where(role => role is AdminRole or WriterRole or EditorRole or GeneralRole).ToList();
+			List<string> removableRoles = [.. currentRoles.Where(role => role is AdminRole or WriterRole or EditorRole or GeneralRole)];
 			if (removableRoles.Count > 0)
 			{
 				_ = await _userManager.RemoveFromRolesAsync(user, removableRoles);
@@ -249,31 +240,30 @@ namespace School_Blog_project.Pages.AdminOnly
 				Email = settings.MediaContact?.Email
 			};
 
-			OffSiteLinks = settings.OffSiteLinks
+			OffSiteLinks = [.. settings.OffSiteLinks
 				.OrderBy(link => link.Name)
 				.Select(link => new OffSiteLinkViewModel
 				{
 					Id = link.Id,
 					Name = link.Name,
 					Url = link.URL
-				})
-				.ToList();
+				})];
 
 			List<UserRowViewModel> users = await LoadUsersAsync();
-			WriterUsers = users.Where(user => !user.IsAdmin && user.PrimaryRole == WriterRole).ToList();
-			EditorUsers = users.Where(user => !user.IsAdmin && user.PrimaryRole == EditorRole).ToList();
-			GeneralUsers = users.Where(user => !user.IsAdmin && user.PrimaryRole == GeneralRole).ToList();
-			AdminUsers = users.Where(user => user.IsAdmin).ToList();
+			WriterUsers = [.. users.Where(user => !user.IsAdmin && user.PrimaryRole == WriterRole)];
+			EditorUsers = [.. users.Where(user => !user.IsAdmin && user.PrimaryRole == EditorRole)];
+			GeneralUsers = [.. users.Where(user => !user.IsAdmin && user.PrimaryRole == GeneralRole)];
+			AdminUsers = [.. users.Where(user => user.IsAdmin)];
 
 			PrimaryAdminUserId = AdminUsers.OrderBy(u => u.UserId, StringComparer.Ordinal).FirstOrDefault()?.UserId;
-			var currentUserId = _userManager.GetUserId(User);
+			string? currentUserId = _userManager.GetUserId(User);
 			IsCurrentUserSuperAdmin = string.Equals(currentUserId, PrimaryAdminUserId, StringComparison.Ordinal);
 		}
 
 		private async Task<string?> GetPrimaryAdminUserIdAsync()
 		{
 			IList<ApplicationUser> adminUsers = await _userManager.GetUsersInRoleAsync(AdminRole);
-			List<string> adminUserIds = adminUsers.Select(user => user.Id).ToList();
+			List<string> adminUserIds = [.. adminUsers.Select(user => user.Id)];
 
 			return adminUserIds.OrderBy(userId => userId, StringComparer.Ordinal).FirstOrDefault();
 		}
@@ -300,7 +290,7 @@ namespace School_Blog_project.Pages.AdminOnly
 					UserId = user.Id,
 					UserName = user.UserName ?? user.Email ?? user.Id,
 					Email = user.Email,
-					Roles = roles.OrderBy(role => role).ToList(),
+					Roles = [.. roles.OrderBy(role => role)],
 					PrimaryRole = primaryRole,
 					IsAdmin = isAdmin
 				});

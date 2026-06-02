@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace School_Blog_project.Models
+﻿namespace School_Blog_project.Models
 {
 	/// <summary>
 	/// Represents the data model for the home page, including featured and news stories, as well as pagination
@@ -55,7 +52,7 @@ namespace School_Blog_project.Models
 		/// Gets the date and time when the article was published.
 		/// </summary>
 		public DateTime DatePublished { get; init; }
-		
+
 		/// <summary>
 		/// Gets the description of the article.
 		/// </summary>
@@ -65,7 +62,7 @@ namespace School_Blog_project.Models
 		/// Gets the URL of the thumbnail image associated with this article.
 		/// </summary>
 		public required string ImageUrl { get; init; }
-		
+
 		/// <summary>
 		/// Gets the URL-friendly slug for the article.
 		/// </summary>

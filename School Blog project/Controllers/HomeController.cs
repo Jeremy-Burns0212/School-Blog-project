@@ -7,17 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace School_Blog_project.Controllers
 {
-	public class HomeController : Controller
+	public partial class HomeController(ApplicationDbContext context) : Controller
 	{
 		private const int NewsPageSize = 6;
 		private const string PlaceholderImageUrl = AssetPaths.PlaceholderImage;
 
-		private readonly ApplicationDbContext _context;
-
-		public HomeController(ApplicationDbContext context)
-		{
-			_context = context;
-		}
+		private readonly ApplicationDbContext _context = context;
 
 		/// <summary>
 		/// Returns the home page view with featured stories and paginated news articles. It retrieves the most recent
@@ -233,7 +228,7 @@ namespace School_Blog_project.Controllers
 		/// </summary>
 		private static List<HomePageArticleViewModel> PadWithPlaceholders(IEnumerable<HomePageArticleViewModel> items, int count)
 		{
-			List<HomePageArticleViewModel> list = items.ToList();
+			List<HomePageArticleViewModel> list = [.. items];
 
 			while (list.Count < count)
 			{
@@ -246,8 +241,11 @@ namespace School_Blog_project.Controllers
 		// Converts a given string into a URL-friendly slug by removing non-alphanumeric characters and replacing them with hyphens.
 		private static string Slugify(string value)
 		{
-			string slug = Regex.Replace(value.Trim().ToLowerInvariant(), @"[^a-z0-9]+", "-");
+			string slug = SlugRegex().Replace(value.Trim().ToLowerInvariant(), "-");
 			return slug.Trim('-');
 		}
+
+		[GeneratedRegex(@"[^a-z0-9]+")]
+		private static partial Regex SlugRegex();
 	}
 }

@@ -4,8 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-School_Blog_project-db0140bc-6ed1-486d-abdc-f7e7b7d78931</UserSecretsId>
-    <RootNamespace>School_Blog_project</RootNamespace>
+    <UserSecretsId>aspnet-SchoolBlogProject-db0140bc-6ed1-486d-abdc-f7e7b7d78931</UserSecretsId>
+    <RootNamespace>SchoolBlogProject</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,8 @@
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
     <PackageReference Include="xunit.assert" Version="2.9.3" />
     <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
   <ItemGroup>

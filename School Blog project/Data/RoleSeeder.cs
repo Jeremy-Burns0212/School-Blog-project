@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace School_Blog_project.Data
+namespace SchoolBlogProject.Data
 {
 	/// <summary>
 	/// Ensures application roles exist. This runs at startup to create the minimal set

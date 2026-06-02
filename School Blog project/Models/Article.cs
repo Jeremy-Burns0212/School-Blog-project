@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents a blog article stored in the application database.

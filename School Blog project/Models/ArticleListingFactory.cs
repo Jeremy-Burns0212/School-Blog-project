@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
+using SchoolBlogProject.Data;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Provides factory methods for creating view models representing paginated article listings, such as category and news
@@ -11,7 +12,7 @@ namespace School_Blog_project.Models
 	/// <remarks>This static class centralizes logic for constructing article listing pages, including support for
 	/// filtering by category or year, pagination, and placeholder content for incomplete pages. Use these methods to
 	/// generate view models suitable for display in UI components that present lists of articles.</remarks>
-	public static class ArticleListingFactory
+	public static partial class ArticleListingFactory
 	{
 		/// <summary>
 		/// Default number of articles to display per page if not specified.
@@ -115,16 +116,11 @@ namespace School_Blog_project.Models
 
 				// If we found matching category IDs, filter articles to those categories.
 				// Otherwise, return an empty result.
-				if (categoryIds.Count > 0)
-				{
-					query = query.Where(article =>
+				query = categoryIds.Count > 0
+					? query.Where(article =>
 						article.ArticleCategories.Any(articleCategory =>
-							categoryIds.Contains(articleCategory.CatagoryId)));
-				}
-				else
-				{
-					query = query.Where(_ => false);
-				}
+							categoryIds.Contains(articleCategory.CatagoryId)))
+					: query.Where(_ => false);
 			}
 
 			// Order articles by most recent publication date first.
@@ -140,7 +136,7 @@ namespace School_Blog_project.Models
 				.ToListAsync();
 
 			// Convert the retrieved articles to their summary representations for display in the listing.
-			List<ArticleSummary> articles = pageArticles.Select(ToSummary).ToList();
+			List<ArticleSummary> articles = [.. pageArticles.Select(ToSummary)];
 
 			// If there are fewer articles than the requested page size, fill the remaining slots with placeholder summaries.
 			while (articles.Count < pageSize)
@@ -160,8 +156,8 @@ namespace School_Blog_project.Models
 				TotalPages = totalPages,
 				PageSize = pageSize,
 				RouteValues = year.HasValue
-					? new Dictionary<string, string> { ["year"] = year.Value.ToString() }
-					: new Dictionary<string, string>(),
+					? new Dictionary<string, string> { ["year"] = year.Value.ToString(CultureInfo.InvariantCulture) }
+					: [],
 				NewsArchives = archives
 			};
 		}
@@ -215,8 +211,11 @@ namespace School_Blog_project.Models
 		/// </summary>
 		private static string Slugify(string value)
 		{
-			string slug = Regex.Replace(value.Trim().ToLowerInvariant(), @"[^a-z0-9]+", "-");
+			string slug = SlugRegex().Replace(value.Trim().ToLowerInvariant(), "-");
 			return slug.Trim('-');
 		}
+
+		[GeneratedRegex(@"[^a-z0-9]+")]
+		private static partial Regex SlugRegex();
 	}
 }

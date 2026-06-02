@@ -1,31 +1,6 @@
-﻿@using School_Blog_project.Models
-@{
-    // Reuse the SiteSettings instance already loaded by the layout.
-    SiteSettings siteSettings = ViewData["SiteSettings"] as SiteSettings ?? new SiteSettings();
-
-    // Pull the nested MediaContact record from the current site settings.
-    MediaContact? mediaContact = siteSettings.MediaContact;
-
-    // Resolve the media contact job title, falling back to a safe default if the database value is empty.
-    string jobPosition = string.IsNullOrWhiteSpace(mediaContact?.JobPosition)
-        ? "Job Position"
-        : mediaContact.JobPosition;
-
-    // Resolve the contact name, falling back to a safe default if the database value is empty.
-    string fullName = string.IsNullOrWhiteSpace(mediaContact?.FullName)
-        ? "Contact Name"
-        : mediaContact.FullName;
-
-    // Resolve the contact phone number, does not display a default if the database value is empty.
-    string phone = string.IsNullOrWhiteSpace(mediaContact?.Phone)
-        ? ""
-        : mediaContact.Phone;
-
-    // Resolve the contact email, does not display a default if the database value is empty.
-    string email = string.IsNullOrWhiteSpace(mediaContact?.Email)
-        ? ""
-        : mediaContact.Email;
-}
+@using Microsoft.EntityFrameworkCore
+@using SchoolBlogProject
+@using SchoolBlogProject.Models
 
 @* Media contact card used in the story list sidebar. *@
 <div class="card">
@@ -33,10 +8,48 @@
     <div class="card-header">Media Contact</div>
 
     @* Card body section *@
+@inject SchoolBlogProject.Data.ApplicationDbContext DbContext
+@{
+    SiteSettings? siteSettings = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AsNoTracking(DbContext.SiteSettings)
+        .OrderBy(settings => settings.SiteSettingsId)
+        .Include(settings => settings.MediaContact)
+        .FirstOrDefaultAsync();
+
+    MediaContact? mediaContact = siteSettings?.MediaContact;
+
+    string jobPosition = string.IsNullOrWhiteSpace(mediaContact?.JobPosition)
+        ? "Media Relations"
+        : mediaContact.JobPosition;
+
+    string fullName = string.IsNullOrWhiteSpace(mediaContact?.FullName)
+        ? ""
+        : mediaContact.FullName;
+
+    string phone = string.IsNullOrWhiteSpace(mediaContact?.Phone)
+        ? ""
+        : mediaContact.Phone;
+
+    string email = string.IsNullOrWhiteSpace(mediaContact?.Email)
+        ? ""
+        : mediaContact.Email;
+}
+
+<div class="card site-footer-card">
+    <div class="card-header bg-transparent fw-semibold">Media Contact</div>
     <div class="card-body">
 
         @* Organization contact role/title *@
         <h6 class="card-title mb-1">@jobPosition</h6>
+        @if (mediaContact is null || (string.IsNullOrWhiteSpace(mediaContact.JobPosition)
+            && string.IsNullOrWhiteSpace(mediaContact.FullName)
+            && string.IsNullOrWhiteSpace(mediaContact.Phone)
+            && string.IsNullOrWhiteSpace(mediaContact.Email)))
+        {
+            <p class="small text-muted mb-0">No media contact has been configured yet.</p>
+        }
+        else
+        {
+            <h6 class="card-title mb-1">@(string.IsNullOrWhiteSpace(mediaContact?.JobPosition) ? "Media Relations" : mediaContact.JobPosition)</h6>
 
         @* Contact name *@
         <p class="small text-muted mb-1">@fullName</p>
@@ -46,5 +59,20 @@
 
         @* Contact email with a mailto link *@
         <p class="small text-muted mb-0">Email: <a href="mailto:@email">@email</a></p>
+            @if (!string.IsNullOrWhiteSpace(mediaContact?.FullName))
+            {
+                <p class="small text-muted mb-1">@fullName</p>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(phone))
+            {
+                <p class="small text-muted mb-1">Phone: @phone</p>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(email))
+            {
+                <p class="small text-muted mb-0">Email: <a href="mailto:@email">@email</a></p>
+            }
+        }
     </div>
 </div>

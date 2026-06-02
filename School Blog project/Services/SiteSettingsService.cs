@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
-using School_Blog_project.Models;
+using SchoolBlogProject.Data;
+using SchoolBlogProject.Models;
 
-namespace School_Blog_project.Services
+namespace SchoolBlogProject.Services
 {
 	/// <summary>
 	/// Provides operations for retrieving and managing site settings from the application's data store.

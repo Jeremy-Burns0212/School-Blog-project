@@ -1,4 +1,4 @@
-﻿namespace School_Blog_project.Models
+﻿namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents the data required to display and filter news articles by year in an archive view.

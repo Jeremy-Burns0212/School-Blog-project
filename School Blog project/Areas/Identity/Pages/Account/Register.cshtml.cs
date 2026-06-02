@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using School_Blog_project.Data;
+using SchoolBlogProject.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace School_Blog_project.Areas.Identity.Pages.Account
+namespace SchoolBlogProject.Areas.Identity.Pages.Account
 {
 	[AllowAnonymous]
 	public class RegisterModel(

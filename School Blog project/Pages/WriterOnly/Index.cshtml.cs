@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 
-namespace School_Blog_project.Pages.WriterOnly
+namespace SchoolBlogProject.Pages.WriterOnly
 {
 	[Authorize(Policy = "IsWriter")]
 	public class IndexModel : PageModel

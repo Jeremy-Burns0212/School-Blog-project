@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
-using School_Blog_project.Services;
+using SchoolBlogProject.Data;
+using SchoolBlogProject.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

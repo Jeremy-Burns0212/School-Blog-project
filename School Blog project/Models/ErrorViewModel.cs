@@ -1,4 +1,4 @@
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// View model used to render error information to the user.

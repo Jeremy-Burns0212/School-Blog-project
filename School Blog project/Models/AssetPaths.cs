@@ -1,4 +1,4 @@
-﻿namespace School_Blog_project.Models
+﻿namespace SchoolBlogProject.Models
 {
 	public static class AssetPaths
 	{

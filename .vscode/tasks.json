@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run School Blog site",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--launch-profile",
+				"http"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/School Blog project"
+			},
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}

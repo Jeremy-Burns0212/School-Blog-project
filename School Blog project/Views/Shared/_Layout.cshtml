@@ -1,5 +1,7 @@
 @using Microsoft.EntityFrameworkCore
-@inject School_Blog_project.Data.ApplicationDbContext DbContext
+@using SchoolBlogProject
+@using SchoolBlogProject.Models
+@inject SchoolBlogProject.Data.ApplicationDbContext DbContext
 @{
     SiteSettings? siteSettings = await DbContext.SiteSettings
         .AsNoTracking()

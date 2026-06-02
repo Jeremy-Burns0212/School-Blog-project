@@ -1,4 +1,6 @@
-@using School_Blog_project.Models
+@using Microsoft.EntityFrameworkCore
+@using SchoolBlogProject
+@using SchoolBlogProject.Models
 
 @* Media contact card used in the story list sidebar. *@
 <div class="card">
@@ -6,11 +8,9 @@
     <div class="card-header">Media Contact</div>
 
     @* Card body section *@
-@using Microsoft.EntityFrameworkCore
-@inject School_Blog_project.Data.ApplicationDbContext DbContext
+@inject SchoolBlogProject.Data.ApplicationDbContext DbContext
 @{
-    SiteSettings? siteSettings = await DbContext.SiteSettings
-        .AsNoTracking()
+    SiteSettings? siteSettings = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AsNoTracking(DbContext.SiteSettings)
         .OrderBy(settings => settings.SiteSettingsId)
         .Include(settings => settings.MediaContact)
         .FirstOrDefaultAsync();

@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
-using School_Blog_project.Models;
+using SchoolBlogProject.Data;
+using SchoolBlogProject.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace School_Blog_project.Pages.AdminOnly
+namespace SchoolBlogProject.Pages.AdminOnly
 {
 	[Authorize(Roles = "Admin")]
 	public class IndexModel(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager) : PageModel

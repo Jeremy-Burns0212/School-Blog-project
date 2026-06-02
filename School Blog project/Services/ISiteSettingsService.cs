@@ -1,6 +1,6 @@
-﻿using School_Blog_project.Models;
+﻿using SchoolBlogProject.Models;
 
-namespace School_Blog_project.Services
+namespace SchoolBlogProject.Services
 {
 	/// <summary>
 	/// This interface defines the contract for a service that provides operations

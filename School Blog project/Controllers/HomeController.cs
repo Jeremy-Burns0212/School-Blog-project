@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
-using School_Blog_project.Models;
+using SchoolBlogProject.Data;
+using SchoolBlogProject.Models;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace School_Blog_project.Controllers
+namespace SchoolBlogProject.Controllers
 {
 	public partial class HomeController(ApplicationDbContext context) : Controller
 	{

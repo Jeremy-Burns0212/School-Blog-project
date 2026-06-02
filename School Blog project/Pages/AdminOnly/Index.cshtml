@@ -1,6 +1,8 @@
 @page
-@model School_Blog_project.Pages.AdminOnly.IndexModel
+@model SchoolBlogProject.Pages.AdminOnly.IndexModel
 @using Microsoft.AspNetCore.Authorization
+@using SchoolBlogProject
+@using SchoolBlogProject.Models
 @attribute [Authorize(Roles = "Admin")]
 @{
   Layout = "~/Views/Shared/_Layout.cshtml";

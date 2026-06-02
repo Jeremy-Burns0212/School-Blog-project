@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Models;
+using SchoolBlogProject.Models;
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
-namespace School_Blog_project.Data
+namespace SchoolBlogProject.Data
 {
 	/// <summary>
 	/// EF Core database context for the School Blog application.

@@ -1,4 +1,4 @@
-﻿namespace School_Blog_project
+﻿namespace SchoolBlogProject
 {
 	/// <summary>
 	/// Placeholder static class intended for database seeding helpers.

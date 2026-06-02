@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
+using SchoolBlogProject.Data;
 
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Provides a factory for creating instances of the NewsArchivesViewModel class based on available article publication

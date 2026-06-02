@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace School_Blog_project.Data
+namespace SchoolBlogProject.Data
 {
 	/// <summary>
 	/// Helper to provision initial roles and admin users for a deployment.

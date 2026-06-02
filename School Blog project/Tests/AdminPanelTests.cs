@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Primitives;
 using Xunit;
 
-namespace School_Blog_project.Tests
+namespace SchoolBlogProject.Tests
 {
 	public class AdminPanelTests
 	{

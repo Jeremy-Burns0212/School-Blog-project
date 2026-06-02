@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	public class Categories
 	{

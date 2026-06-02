@@ -1,4 +1,4 @@
-﻿namespace School_Blog_project.Models
+﻿namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents a reusable article listing page for Students, Graduates, Faculty, and News.

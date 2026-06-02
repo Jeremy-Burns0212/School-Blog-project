@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using School_Blog_project.Data;
+using SchoolBlogProject.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Provides factory methods for creating view models representing paginated article listings, such as category and news

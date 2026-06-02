@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using School_Blog_project.Data;
+using SchoolBlogProject.Data;
 
 #nullable disable
 
-namespace School_Blog_project.Migrations
+namespace SchoolBlogProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260512211552_InitialCreate")]

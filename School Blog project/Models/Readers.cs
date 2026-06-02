@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents a reader record used for development and seed data.

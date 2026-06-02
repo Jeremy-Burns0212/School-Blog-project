@@ -1,4 +1,4 @@
-﻿namespace School_Blog_project.Models
+﻿namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents the data model for the home page, including featured and news stories, as well as pagination

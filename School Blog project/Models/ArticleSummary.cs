@@ -1,4 +1,4 @@
-﻿namespace School_Blog_project.Models
+﻿namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents the information about an article that is displayed in the _ArticleList view across the 

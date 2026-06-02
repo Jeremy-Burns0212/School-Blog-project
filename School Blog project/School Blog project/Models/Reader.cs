@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace School_Blog_project.Models
+namespace SchoolBlogProject.Models
 {
 	/// <summary>
 	/// Represents a persistent reader record used by the application seed data.

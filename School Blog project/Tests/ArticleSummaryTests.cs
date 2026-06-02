@@ -1,7 +1,7 @@
-using School_Blog_project.Models;
+using SchoolBlogProject.Models;
 using Xunit;
 
-namespace School_Blog_project.Tests
+namespace SchoolBlogProject.Tests
 {
 	public class ArticleSummaryTests
 	{

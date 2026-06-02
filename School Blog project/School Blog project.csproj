@@ -4,8 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-School_Blog_project-db0140bc-6ed1-486d-abdc-f7e7b7d78931</UserSecretsId>
-    <RootNamespace>School_Blog_project</RootNamespace>
+    <UserSecretsId>aspnet-SchoolBlogProject-db0140bc-6ed1-486d-abdc-f7e7b7d78931</UserSecretsId>
+    <RootNamespace>SchoolBlogProject</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

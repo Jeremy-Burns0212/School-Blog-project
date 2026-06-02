@@ -36,7 +36,7 @@
             </div>
           </div>
 
-          <form method="post" asp-page-handler="SaveSettings" class="row g-3">
+          <form method="post" asp-page-handler="SaveSettings" class="row g-3 site-tertiary-surface">
             <div class="col-md-6">
               <label asp-for="SettingsForm.SchoolName" class="form-label">School name (full)</label>
               <input asp-for="SettingsForm.SchoolName" class="form-control" />
@@ -71,26 +71,37 @@
             <div class="col-12">
               <div class="admin-section-title">Color Scheme</div>
             </div>
-            <div class="col-md-6">
+            <div class="col-12 col-md-6 col-xl-4">
               <div class="color-preview-card">
                 <div class="color-preview" id="primaryColorPreview"></div>
                 <label asp-for="SettingsForm.PrimaryColor" class="form-label mt-3">Primary color (hex)</label>
-                <div class="d-flex flex-column gap-2">
+                <div class="d-flex flex-column flex-sm-row flex-wrap align-items-start gap-2">
                   <input type="color" id="SettingsForm_PrimaryColorPicker" class="form-control form-control-color admin-color-control" />
                   <input asp-for="SettingsForm.PrimaryColor" type="text" class="form-control admin-hex-input" />
                 </div>
                 <span asp-validation-for="SettingsForm.PrimaryColor" class="text-danger small"></span>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-12 col-md-6 col-xl-4">
               <div class="color-preview-card">
                 <div class="color-preview" id="secondaryColorPreview"></div>
                 <label asp-for="SettingsForm.SecondaryColor" class="form-label mt-3">Secondary color (hex)</label>
-                <div class="d-flex flex-column gap-2">
+                <div class="d-flex flex-column flex-sm-row flex-wrap align-items-start gap-2">
                   <input type="color" id="SettingsForm_SecondaryColorPicker" class="form-control form-control-color admin-color-control" />
                   <input asp-for="SettingsForm.SecondaryColor" type="text" class="form-control admin-hex-input" />
                 </div>
                 <span asp-validation-for="SettingsForm.SecondaryColor" class="text-danger small"></span>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-4">
+              <div class="color-preview-card">
+                <div class="color-preview" id="tertiaryColorPreview"></div>
+                <label asp-for="SettingsForm.TertiaryColor" class="form-label mt-3">Tertiary color (hex)</label>
+                <div class="d-flex flex-column flex-sm-row flex-wrap align-items-start gap-2">
+                  <input type="color" id="SettingsForm_TertiaryColorPicker" class="form-control form-control-color admin-color-control" />
+                  <input asp-for="SettingsForm.TertiaryColor" type="text" class="form-control admin-hex-input" />
+                </div>
+                <span asp-validation-for="SettingsForm.TertiaryColor" class="text-danger small"></span>
               </div>
             </div>
 
@@ -219,9 +230,18 @@
 <partial name="_ValidationScriptsPartial" />
 <script>
 (function () {
+  function getStoredColor(key) {
+    try {
+      return localStorage.getItem(key) || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
   const colorPairs = [
-    { previewId: 'primaryColorPreview', colorId: 'SettingsForm_PrimaryColorPicker', textId: 'SettingsForm_PrimaryColor' },
-    { previewId: 'secondaryColorPreview', colorId: 'SettingsForm_SecondaryColorPicker', textId: 'SettingsForm_SecondaryColor' }
+    { previewId: 'primaryColorPreview', colorId: 'SettingsForm_PrimaryColorPicker', textId: 'SettingsForm_PrimaryColor', storageKey: 'primaryColor' },
+    { previewId: 'secondaryColorPreview', colorId: 'SettingsForm_SecondaryColorPicker', textId: 'SettingsForm_SecondaryColor', storageKey: 'secondaryColor' },
+    { previewId: 'tertiaryColorPreview', colorId: 'SettingsForm_TertiaryColorPicker', textId: 'SettingsForm_TertiaryColor', storageKey: 'tertiaryColor' }
   ];
 
   function normalizeHex(value) {
@@ -263,7 +283,9 @@
 
     colorInput.addEventListener('input', (event) => sync(event.target.value));
     textInput.addEventListener('input', (event) => sync(event.target.value));
-    sync(textInput.value || colorInput.value);
+
+    const storedValue = getStoredColor(pair.storageKey);
+    sync(storedValue || textInput.value || colorInput.value);
   }
 })();
 </script>
@@ -280,6 +302,8 @@
   const primaryText = document.getElementById('SettingsForm_PrimaryColor');
   const secondaryPicker = document.getElementById('SettingsForm_SecondaryColorPicker');
   const secondaryText = document.getElementById('SettingsForm_SecondaryColor');
+  const tertiaryPicker = document.getElementById('SettingsForm_TertiaryColorPicker');
+  const tertiaryText = document.getElementById('SettingsForm_TertiaryColor');
 
   function readPrimary() {
     return normalizeHex((primaryText && primaryText.value) || (primaryPicker && primaryPicker.value) || '');
@@ -289,11 +313,21 @@
     return normalizeHex((secondaryText && secondaryText.value) || (secondaryPicker && secondaryPicker.value) || '');
   }
 
+  function readTertiary() {
+    return normalizeHex((tertiaryText && tertiaryText.value) || (tertiaryPicker && tertiaryPicker.value) || '');
+  }
+
   function applyColors() {
     const p = readPrimary();
     const s = readSecondary();
+    const t = readTertiary();
     if (p) document.documentElement.style.setProperty('--site-primary', p);
     if (s) document.documentElement.style.setProperty('--site-secondary', s);
+    if (t) document.documentElement.style.setProperty('--site-tertiary', t);
+
+    try {
+      if (t) localStorage.setItem('tertiaryColor', t);
+    } catch (error) { }
   }
 
   // Find the containing form for the primary picker

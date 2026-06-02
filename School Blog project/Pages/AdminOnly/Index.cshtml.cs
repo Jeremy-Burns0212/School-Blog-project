@@ -242,6 +242,7 @@ namespace School_Blog_project.Pages.AdminOnly
 				SecondaryColor = settings.ColorScheme is null || string.IsNullOrWhiteSpace(settings.ColorScheme.Color2)
 					? "#F5A623"
 					: $"#{settings.ColorScheme.Color2.ToUpperInvariant()}",
+				TertiaryColor = "#FFFFFF",
 				JobPosition = settings.MediaContact?.JobPosition,
 				FullName = settings.MediaContact?.FullName,
 				Phone = settings.MediaContact?.Phone,
@@ -440,6 +441,11 @@ namespace School_Blog_project.Pages.AdminOnly
 			[StringLength(7, MinimumLength = 7)]
 			[RegularExpression(@"^#?[0-9A-Fa-f]{6}$", ErrorMessage = "Enter a valid hex color such as #F5A623.")]
 			public string SecondaryColor { get; set; } = "#F5A623";
+
+			[Required]
+			[StringLength(7, MinimumLength = 7)]
+			[RegularExpression(@"^#?[0-9A-Fa-f]{6}$", ErrorMessage = "Enter a valid hex color such as #FFFFFF.")]
+			public string TertiaryColor { get; set; } = "#FFFFFF";
 		}
 
 		public sealed class OffSiteLinkInputModel

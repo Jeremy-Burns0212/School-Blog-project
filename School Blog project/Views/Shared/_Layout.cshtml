@@ -31,6 +31,7 @@
     string secondaryColor = string.IsNullOrWhiteSpace(siteSettings?.ColorScheme?.Color2)
         ? "#F5A623"
         : $"#{siteSettings!.ColorScheme!.Color2.ToUpperInvariant()}";
+    string tertiaryColor = "#FFFFFF";
     IReadOnlyList<OffSiteLink> footerLinks = siteSettings?.OffSiteLinks
         .OrderBy(link => link.Name)
         .ToList() ?? [];
@@ -46,11 +47,49 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/School_Blog_project.styles.css" asp-append-version="true" />
     <style>
-        body {
+        :root {
             --site-primary: @primaryColor;
             --site-secondary: @secondaryColor;
+            --site-tertiary: @tertiaryColor;
         }
     </style>
+    <script>
+        (function () {
+            function applySavedColors() {
+                try {
+                    const primary = localStorage.getItem('primaryColor');
+                    const secondary = localStorage.getItem('secondaryColor');
+                    const tertiary = localStorage.getItem('tertiaryColor');
+
+                    if (primary) {
+                        document.documentElement.style.setProperty('--site-primary', primary);
+                    }
+
+                    if (secondary) {
+                        document.documentElement.style.setProperty('--site-secondary', secondary);
+                    }
+
+                    if (tertiary) {
+                        document.documentElement.style.setProperty('--site-tertiary', tertiary);
+                    }
+                } catch (error) {
+                    console.warn('Unable to apply saved site colors.', error);
+                }
+            }
+
+            function applyPageSurfaceClasses() {
+                const main = document.querySelector('main[role="main"]');
+                if (main && window.location.pathname.toLowerCase().startsWith('/identity/account/')) {
+                    main.classList.add('site-auth-page');
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', applyPageSurfaceClasses);
+
+            window.applySavedColors = applySavedColors;
+            applySavedColors();
+        })();
+    </script>
 </head>
 <body>
     <header>

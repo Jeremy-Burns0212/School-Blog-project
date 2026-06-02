@@ -1,4 +1,4 @@
-﻿@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore
 @inject School_Blog_project.Data.ApplicationDbContext DbContext
 @{
     SiteSettings? siteSettings = await DbContext.SiteSettings
@@ -39,10 +39,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic document metadata -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - @schoolName</title>
     <script type="importmap"></script>
+
+    <!-- Shared application styles -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/School_Blog_project.styles.css" asp-append-version="true" />
@@ -92,6 +95,7 @@
     </script>
 </head>
 <body>
+    <!-- Site header and primary navigation -->
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3 site-navbar">
             <div class="container-fluid">
@@ -105,6 +109,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                <!-- Main navigation links and shared login partial -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -120,6 +125,8 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="News">News</a>
                         </li>
                     </ul>
+
+                    <!-- Authentication UI shared across the application -->
                     <partial name="_LoginPartial" />
 
                     <!-- Non-functional search input (placeholder only) -->
@@ -130,12 +137,15 @@
             </div>
         </nav>
     </header>
+
+    <!-- Main page content -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Site footer with branding, links, and blurb -->
     <footer class="border-top footer text-muted">
         <div class="container py-4">
             <div class="row align-items-start g-4">
@@ -191,6 +201,8 @@
             </div>
         </div>
     </footer>
+
+    <!-- Shared client-side scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

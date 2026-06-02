@@ -1,4 +1,4 @@
-﻿@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore
 @inject School_Blog_project.Data.ApplicationDbContext DbContext
 @{
     SiteSettings? siteSettings = await DbContext.SiteSettings
@@ -8,6 +8,22 @@
         .FirstOrDefaultAsync();
 
     MediaContact? mediaContact = siteSettings?.MediaContact;
+
+    string jobPosition = string.IsNullOrWhiteSpace(mediaContact?.JobPosition)
+        ? "Media Relations"
+        : mediaContact.JobPosition;
+
+    string fullName = string.IsNullOrWhiteSpace(mediaContact?.FullName)
+        ? ""
+        : mediaContact.FullName;
+
+    string phone = string.IsNullOrWhiteSpace(mediaContact?.Phone)
+        ? ""
+        : mediaContact.Phone;
+
+    string email = string.IsNullOrWhiteSpace(mediaContact?.Email)
+        ? ""
+        : mediaContact.Email;
 }
 
 <div class="card site-footer-card">
@@ -22,21 +38,21 @@
         }
         else
         {
-            <h6 class="card-title mb-1">@(string.IsNullOrWhiteSpace(mediaContact?.JobPosition) ? "Media Relations" : mediaContact.JobPosition)</h6>
+            <h6 class="card-title mb-1">@jobPosition</h6>
 
-            @if (!string.IsNullOrWhiteSpace(mediaContact?.FullName))
+            @if (!string.IsNullOrWhiteSpace(fullName))
             {
-                <p class="small text-muted mb-1">@mediaContact.FullName</p>
+                <p class="small text-muted mb-1">@fullName</p>
             }
 
-            @if (!string.IsNullOrWhiteSpace(mediaContact?.Phone))
+            @if (!string.IsNullOrWhiteSpace(phone))
             {
-                <p class="small text-muted mb-1">Phone: @mediaContact.Phone</p>
+                <p class="small text-muted mb-1">Phone: @phone</p>
             }
 
-            @if (!string.IsNullOrWhiteSpace(mediaContact?.Email))
+            @if (!string.IsNullOrWhiteSpace(email))
             {
-                <p class="small text-muted mb-0">Email: <a href="mailto:@mediaContact.Email">@mediaContact.Email</a></p>
+                <p class="small text-muted mb-0">Email: <a href="mailto:@email">@email</a></p>
             }
         }
     </div>

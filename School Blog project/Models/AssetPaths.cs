@@ -2,6 +2,6 @@
 {
 	public static class AssetPaths
 	{
-		public const string PlaceholderImage = "/images/placeholder.svg";
+		public const string PlaceholderImage = "/images/placeholder-thumbnail.svg";
 	}
 }
